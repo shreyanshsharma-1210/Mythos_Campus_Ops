@@ -37,6 +37,11 @@ import CanteenPredictor from "./pages/CanteenPredictor";
 import ScholarshipFinder from "./pages/ScholarshipFinder";
 import AgentLog from "./pages/AgentLog";
 
+// Allowed roles for student-facing pages (students + teachers, admins excluded to keep separation)
+const STUDENT_ROLES = ["student", "teacher"] as const;
+// Admin-only role
+const ADMIN_ROLE = "admin" as const;
+
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
@@ -45,39 +50,121 @@ const App = () => (
           <Toaster />
           <Sonner />
           <Routes>
+            {/* Public landing page */}
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+
+            {/* Auth pages — redirect if already logged in */}
+            <Route path="/login"  element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
 
-            <Route path="/dashboard2" element={<ProtectedRoute requiredRole="student"><Dashboard2 /></ProtectedRoute>} />
+            {/* ── Student / Teacher routes ── */}
+            <Route path="/dashboard2" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <Dashboard2 />
+              </ProtectedRoute>
+            } />
 
-            {/* CampusOS Modules */}
-            <Route path="/grievances/submit" element={<GrievanceSubmit />} />
-            <Route path="/grievances/dashboard" element={<GrievanceDashboard />} />
+            <Route path="/grievances/submit" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <GrievanceSubmit />
+              </ProtectedRoute>
+            } />
+            <Route path="/grievances/dashboard" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <GrievanceDashboard />
+              </ProtectedRoute>
+            } />
 
-            <Route path="/maintenance/report" element={<MaintenanceReport />} />
-            <Route path="/maintenance/dashboard" element={<MaintenanceDashboard />} />
+            <Route path="/maintenance/report" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <MaintenanceReport />
+              </ProtectedRoute>
+            } />
+            <Route path="/maintenance/dashboard" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <MaintenanceDashboard />
+              </ProtectedRoute>
+            } />
 
-            <Route path="/policy" element={<PolicyNavigator />} />
+            <Route path="/policy" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <PolicyNavigator />
+              </ProtectedRoute>
+            } />
 
-            <Route path="/lost" element={<LostReport />} />
-            <Route path="/found" element={<FoundReport />} />
-            <Route path="/lost-found" element={<MatchFeed />} />
-            <Route path="/heatmap" element={<HeatmapView />} />
+            <Route path="/lost" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <LostReport />
+              </ProtectedRoute>
+            } />
+            <Route path="/found" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <FoundReport />
+              </ProtectedRoute>
+            } />
+            <Route path="/lost-found" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <MatchFeed />
+              </ProtectedRoute>
+            } />
+            <Route path="/heatmap" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <HeatmapView />
+              </ProtectedRoute>
+            } />
 
-            {/* Admin */}
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/grievances" element={<AdminGrievances />} />
-            <Route path="/admin/maintenance" element={<AdminMaintenance />} />
-            <Route path="/admin/lost-found" element={<AdminLostFound />} />
-            <Route path="/admin/policy" element={<AdminPolicy />} />
+            <Route path="/attendance" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <AttendanceIntelligence />
+              </ProtectedRoute>
+            } />
+            <Route path="/anti-ragging" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <AntiRagging />
+              </ProtectedRoute>
+            } />
+            <Route path="/canteen" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <CanteenPredictor />
+              </ProtectedRoute>
+            } />
+            <Route path="/scholarships" element={
+              <ProtectedRoute requiredRole={[...STUDENT_ROLES]}>
+                <ScholarshipFinder />
+              </ProtectedRoute>
+            } />
+            <Route path="/agent" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AgentLog />
+              </ProtectedRoute>
+            } />
 
-            {/* New Modules */}
-            <Route path="/attendance" element={<AttendanceIntelligence />} />
-            <Route path="/anti-ragging" element={<AntiRagging />} />
-            <Route path="/canteen" element={<CanteenPredictor />} />
-            <Route path="/scholarships" element={<ScholarshipFinder />} />
-            <Route path="/agent" element={<AgentLog />} />
+            {/* ── Admin-only routes ── */}
+            <Route path="/admin" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/grievances" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AdminGrievances />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/maintenance" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AdminMaintenance />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/lost-found" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AdminLostFound />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/policy" element={
+              <ProtectedRoute requiredRole={ADMIN_ROLE}>
+                <AdminPolicy />
+              </ProtectedRoute>
+            } />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

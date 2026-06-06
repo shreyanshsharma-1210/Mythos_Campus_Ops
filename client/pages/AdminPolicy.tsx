@@ -5,24 +5,8 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/PageLayout";
 import { callGPT } from "@/lib/openai";
 import { extractTextFromPDF } from "@/lib/pdfExtract";
+import { useCampusOS, PolicyDoc } from "@/contexts/CampusOSContext";
 import { BookOpen, Upload, Trash2, TrendingUp, MessageSquare, FileText, Lightbulb } from "lucide-react";
-
-interface PolicyDoc {
-  id: string;
-  name: string;
-  pages: number;
-  active: boolean;
-  uploadedAt: string;
-  queryCount: number;
-  text: string;
-}
-
-const INITIAL_DOCS: PolicyDoc[] = [
-  { id: "d1", name: "Hostel Rules 2025.pdf",    pages: 47, active: true,  uploadedAt: "2026-06-01", queryCount: 203, text: "" },
-  { id: "d2", name: "Exam Policy.pdf",           pages: 23, active: true,  uploadedAt: "2026-06-01", queryCount: 89,  text: "" },
-  { id: "d3", name: "Fee Structure 2026.pdf",    pages: 8,  active: true,  uploadedAt: "2026-06-01", queryCount: 61,  text: "" },
-  { id: "d4", name: "Disciplinary Guide.pdf",    pages: 15, active: false, uploadedAt: "2026-05-15", queryCount: 12,  text: "" },
-];
 
 const TOP_QUERIES = [
   { question: "Can I install an AC in my room?",        count: 34, doc: "Hostel Rules" },
@@ -33,7 +17,13 @@ const TOP_QUERIES = [
 ];
 
 export default function AdminPolicy() {
-  const [docs, setDocs] = useState<PolicyDoc[]>(INITIAL_DOCS);
+  const {
+    policyDocuments: docs,
+    addPolicyDocument,
+    removePolicyDocument,
+    togglePolicyDocumentActive,
+  } = useCampusOS();
+
   const [uploading, setUploading] = useState(false);
   const [faqLoading, setFaqLoading] = useState(false);
   const [faqDoc, setFaqDoc] = useState<string | null>(null);
@@ -60,16 +50,14 @@ export default function AdminPolicy() {
       queryCount: 0,
       text,
     };
-    setDocs((p) => [...p, newDoc]);
+    addPolicyDocument(newDoc);
     setUploading(false);
     e.target.value = "";
   };
 
-  const toggleActive = (id: string) =>
-    setDocs((p) => p.map((d) => (d.id === id ? { ...d, active: !d.active } : d)));
+  const toggleActive = (id: string) => togglePolicyDocumentActive(id);
 
-  const removeDoc = (id: string) =>
-    setDocs((p) => p.filter((d) => d.id !== id));
+  const removeDoc = (id: string) => removePolicyDocument(id);
 
   const generateFAQs = async (doc: PolicyDoc) => {
     setFaqLoading(true);

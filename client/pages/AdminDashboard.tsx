@@ -9,7 +9,7 @@ import { callGPT } from "@/lib/openai";
 import {
   Flag, Wrench, ScanSearch, BookOpen, AlertTriangle,
   TrendingUp, Users, Clock, CheckCircle2, Activity,
-  ChevronRight, Shield,
+  ChevronRight, Shield, Bot,
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -173,6 +173,7 @@ Focus on what needs immediate attention. Be direct.`;
                 { label: "Maintenance Queue",     icon: Wrench,      href: "/admin/maintenance", color: "text-amber-600" },
                 { label: "Lost & Found Moderation",icon: ScanSearch, href: "/admin/lost-found",  color: "text-indigo-600" },
                 { label: "Policy Documents",      icon: BookOpen,    href: "/admin/policy",      color: "text-emerald-600" },
+                { label: "AI Agent Console",      icon: Bot,         href: "/agent",             color: "text-purple-600" },
               ].map((item) => (
                 <button key={item.href} onClick={() => navigate(item.href)}
                   className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-border hover:bg-secondary transition-colors group">

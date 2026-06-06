@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { callGPT } from "@/lib/openai";
@@ -34,8 +35,134 @@ function ConfidenceBadge({ score }: { score: number }) {
   return <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded border bg-secondary text-muted-foreground border-border">WEAK MATCH</span>;
 }
 
+function calculateMatchScore(lost: any, found: any) {
+  const lostItem = (lost.item || "").toLowerCase().trim();
+  const foundItem = (found.item || "").toLowerCase().trim();
+  const lostDesc = (lost.description || "").toLowerCase().trim();
+  const foundDesc = (found.description || "").toLowerCase().trim();
+  const lostCategory = (lost.category || "").toLowerCase().trim();
+  const foundCategory = (found.category || "").toLowerCase().trim();
+
+  // Extract color
+  const colors = ["black", "blue", "red", "green", "white", "silver", "grey", "gray", "yellow", "pink", "gold", "brown", "metal", "steel"];
+  const lostColor = colors.find(c => lostItem.includes(c) || lostDesc.includes(c)) || "";
+  const foundColor = colors.find(c => foundItem.includes(c) || foundDesc.includes(c)) || "";
+
+  // Extract brand
+  const brands = ["lenovo", "milton", "firebolt", "fire bolt", "apple", "samsung", "dell", "hp", "asus", "acer", "sony", "boat", "noise"];
+  const lostBrand = brands.find(b => lostItem.includes(b) || lostDesc.includes(b)) || "";
+  const foundBrand = brands.find(b => foundItem.includes(b) || foundDesc.includes(b)) || "";
+
+  let score = 0;
+  const features: string[] = [];
+
+  // 1. Category similarity
+  let categoryMatch = false;
+  if (lostCategory && foundCategory) {
+    if (lostCategory === foundCategory) {
+      score += 20;
+      categoryMatch = true;
+      features.push("Identical category");
+    } else if (lostCategory.includes(foundCategory) || foundCategory.includes(lostCategory)) {
+      score += 15;
+      categoryMatch = true;
+      features.push("Similar category");
+    }
+  }
+
+  // Helper function to sanitize for soft exact checks
+  const cleanStr = (s: string) => s.replace(/[^a-z0-9]/g, "");
+
+  // 2. Item name similarity (Fuzzy string matches e.g. "firebolt" vs "fire bolt")
+  let nameMatch = false;
+  const lostClean = cleanStr(lostItem);
+  const foundClean = cleanStr(foundItem);
+
+  if (lostClean && foundClean) {
+    if (lostClean === foundClean) {
+      score += 40;
+      nameMatch = true;
+      features.push("Exact item name match");
+    } else if (lostClean.includes(foundClean) || foundClean.includes(lostClean)) {
+      score += 30;
+      nameMatch = true;
+      features.push("Fuzzy item name match");
+    } else {
+      // Check token overlap
+      const lostTokens = lostItem.split(/\s+/).filter(Boolean);
+      const foundTokens = foundItem.split(/\s+/).filter(Boolean);
+      const common = lostTokens.filter(t => foundTokens.includes(t) && t.length > 2);
+      if (common.length > 0) {
+        score += 20;
+        nameMatch = true;
+        features.push("Item name word overlap");
+      }
+    }
+  }
+
+  // 3. Color similarity
+  let colorMatch = false;
+  if (lostColor && foundColor) {
+    if (lostColor === foundColor) {
+      score += 20;
+      colorMatch = true;
+      features.push(`Matching color: ${lostColor}`);
+    }
+  }
+
+  // 4. Brand similarity
+  let brandMatch = false;
+  if (lostBrand && foundBrand) {
+    const b1 = lostBrand.replace(/\s+/g, "");
+    const b2 = foundBrand.replace(/\s+/g, "");
+    if (b1 === b2) {
+      score += 15;
+      brandMatch = true;
+      features.push("Matching brand");
+    }
+  }
+
+  // 5. Description similarity (token overlap)
+  if (lostDesc && foundDesc) {
+    const lostWords = lostDesc.split(/\s+/).filter(w => w.length > 3);
+    const foundWords = foundDesc.split(/\s+/).filter(w => w.length > 3);
+    const commonWords = lostWords.filter(w => foundWords.includes(w));
+    if (commonWords.length > 0) {
+      const bonus = Math.min(commonWords.length * 5, 15);
+      score += bonus;
+      features.push("Description similarity");
+    }
+  }
+
+  // Special override: If category + item name + color match, score must be >= 90
+  if (categoryMatch && nameMatch && colorMatch) {
+    score = Math.max(score, 90);
+  }
+
+  // Cap score at 100
+  score = Math.min(score, 100);
+
+  // If no main matching features (neither category nor name matched), ceiling at 30
+  if (!categoryMatch && !nameMatch) {
+    score = Math.min(score, 30);
+  }
+
+  let confidence = "low";
+  let recommended_action = "unlikely_match";
+  if (score >= 85) {
+    confidence = "high";
+    recommended_action = "claim";
+  } else if (score >= 60) {
+    confidence = "medium";
+    recommended_action = "investigate_further";
+  }
+
+  return { score, features, confidence, recommended_action };
+}
+
 export default function MatchFeed() {
   const { lostItems, foundItems } = useCampusOS();
+  const navigate = useNavigate();
   const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [claimedIds, setClaimedIds] = useState<Set<string>>(new Set());
@@ -43,33 +170,70 @@ export default function MatchFeed() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
+    let active = true;
     async function evaluateMatches() {
+      setLoading(true);
       const results: any[] = [];
-      for (let i = 0; i < Math.min(lostItems.length, foundItems.length); i++) {
-        const lost = lostItems[i];
-        const found = foundItems[i];
-        const systemPrompt = `You are a lost and found matching AI. Return ONLY JSON:
-{"match_score":0,"match_reason":"one sentence","key_matching_features":["f1","f2"],"confidence":"high|medium|low","recommended_action":"claim|investigate_further|unlikely_match"}`;
-        const userMsg = `Lost: ${lost.item} — ${lost.description}\nFound: ${found.item} — ${found.description}`;
-        try {
-          const raw = await callGPT(systemPrompt, userMsg);
-          const parsed = JSON.parse(raw.trim().replace(/```json/g, "").replace(/```/g, ""));
-          results.push({ id: `${lost.id}-${found.id}`, lost, found, ...parsed });
-        } catch {
+      
+      // Combinatorial search: compare each lost item against every found item
+      for (const lost of lostItems) {
+        for (const found of foundItems) {
+          const baseMatch = calculateMatchScore(lost, found);
+          
+          // Filter out completely unrelated matches to keep results clean
+          if (baseMatch.score < 20) continue;
+
+          let match_reason = `Matched on physical attributes: ${baseMatch.features.join(", ")}.`;
+          let key_matching_features = baseMatch.features;
+          let confidence = baseMatch.confidence;
+          let recommended_action = baseMatch.recommended_action;
+
+          // Call GPT only for relevant potential matches to save requests and refine explanations
+          if (baseMatch.score >= 50) {
+            try {
+              const systemPrompt = `You are a lost and found matching AI. Return ONLY JSON:
+{"match_reason":"one sentence explanation of match","key_matching_features":["f1","f2"],"confidence":"high|medium|low","recommended_action":"claim|investigate_further|unlikely_match"}`;
+              const userMsg = `Lost: ${lost.item} — ${lost.description}\nFound: ${found.item} — ${found.description}`;
+              
+              const raw = await callGPT(systemPrompt, userMsg);
+              const parsed = JSON.parse(raw.trim().replace(/```json/g, "").replace(/```/g, ""));
+              if (parsed.match_reason) match_reason = parsed.match_reason;
+              if (parsed.key_matching_features && parsed.key_matching_features.length > 0) {
+                key_matching_features = Array.from(new Set([...baseMatch.features, ...parsed.key_matching_features]));
+              }
+              if (parsed.confidence) confidence = parsed.confidence;
+              if (parsed.recommended_action) recommended_action = parsed.recommended_action;
+            } catch (err) {
+              // fallback
+            }
+          }
+
           results.push({
-            id: `${lost.id}-${found.id}`, lost, found,
-            match_score: 87,
-            match_reason: "Similar description, category, and likely trajectory match.",
-            key_matching_features: ["Similar item type", "Matching color/material", "Nearby locations"],
-            confidence: "high", recommended_action: "claim",
+            id: `${lost.id}-${found.id}`,
+            lost,
+            found,
+            match_score: baseMatch.score,
+            match_reason,
+            key_matching_features,
+            confidence,
+            recommended_action,
           });
         }
       }
-      setMatches(results);
-      setLoading(false);
+
+      // Sort by match score descending to present best matches first
+      results.sort((a, b) => b.match_score - a.match_score);
+
+      if (active) {
+        setMatches(results);
+        setLoading(false);
+      }
     }
     evaluateMatches();
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [lostItems, foundItems]);
 
   const handleClaim = (matchId: string) => {
     const otp = String(Math.floor(100000 + Math.random() * 900000));
@@ -96,6 +260,22 @@ export default function MatchFeed() {
           <p className="text-[9px] font-mono tracking-widest text-muted-foreground uppercase mb-1">Module · Lost & Found</p>
           <h1 className="text-3xl font-display font-black uppercase tracking-wide text-foreground leading-none">AI Match Feed</h1>
           <p className="text-sm text-muted-foreground mt-1">AI reads both item descriptions and connects the right people.</p>
+        </div>
+
+        {/* Quick Action Buttons */}
+        <div className="flex flex-col gap-3 w-full">
+          <Button
+            onClick={() => navigate("/lost")}
+            className="w-full h-12 bg-white border border-border hover:bg-secondary text-foreground hover:text-primary font-display font-black uppercase tracking-widest text-xs shadow-sm rounded-xl transition-all duration-200"
+          >
+            Report Lost Item
+          </Button>
+          <Button
+            onClick={() => navigate("/found")}
+            className="w-full h-12 bg-white border border-border hover:bg-secondary text-foreground hover:text-primary font-display font-black uppercase tracking-widest text-xs shadow-sm rounded-xl transition-all duration-200"
+          >
+            Report Found Item
+          </Button>
         </div>
 
         {/* Stats */}

@@ -17,24 +17,42 @@ interface AuthContextType {
   logout: () => void;
 }
 
+// ── Mock credentials ──────────────────────────────────────────────────────────
+const MOCK_USERS: Array<{ email: string; password: string; uid: string; displayName: string; role: 'student' | 'teacher' | 'admin' }> = [
+  { email: 'student@campus.edu',  password: 'password123', uid: 'mock-student-001', displayName: 'Alex Student',  role: 'student' },
+  { email: 'admin@campus.edu',    password: 'admin123',    uid: 'mock-admin-001',   displayName: 'Admin User',    role: 'admin'   },
+  { email: 'teacher@campus.edu',  password: 'teacher123',  uid: 'mock-teacher-001', displayName: 'Dr. Teacher',   role: 'teacher' },
+];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<User | null>({
-    uid: 'mock-user-123',
-    email: 'student@campus.edu',
-    displayName: 'Mock Student',
-    role: 'student'
-  });
+  // Start with no logged-in user — user must go through login
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
   const login = (email?: string, password?: string) => {
-    setCurrentUser({
-      uid: 'mock-user-123',
-      email: email || 'student@campus.edu',
-      displayName: 'Mock Student',
-      role: 'student'
-    });
+    // Try to match mock credentials
+    const matched = MOCK_USERS.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (matched) {
+      setCurrentUser({
+        uid: matched.uid,
+        email: matched.email,
+        displayName: matched.displayName,
+        role: matched.role,
+      });
+    } else {
+      // Fallback: if no match, still allow login as student (legacy behaviour)
+      setCurrentUser({
+        uid: 'mock-user-123',
+        email: email || 'student@campus.edu',
+        displayName: 'Mock Student',
+        role: 'student',
+      });
+    }
   };
 
   const signup = (
@@ -47,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       uid: 'mock-user-123',
       email: email || 'student@campus.edu',
       displayName: displayName || 'Mock User',
-      role: role || 'student'
+      role: role || 'student',
     });
   };
 

@@ -9,20 +9,21 @@ interface PublicRouteProps {
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { currentUser, loading } = useAuth();
 
-  // Show loading spinner while checking auth state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" />
       </div>
     );
   }
 
-  // If user is already authenticated, redirect to appropriate dashboard
+  // If user is already authenticated, redirect to role-appropriate home
   if (currentUser) {
-    const userRole = localStorage.getItem(`user_${currentUser.uid}_role`);
-    const redirectPath = userRole === 'student' ? '/dashboard2' : '/dashboard';
-    return <Navigate to={redirectPath} replace />;
+    if (currentUser.role === 'admin') {
+      return <Navigate to="/admin" replace />;
+    }
+    // student or teacher → dashboard2
+    return <Navigate to="/dashboard2" replace />;
   }
 
   return <>{children}</>;

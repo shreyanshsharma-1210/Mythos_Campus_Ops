@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { extractTextFromPDF } from "@/lib/pdfExtract";
 import { callGPT } from "@/lib/openai";
 import { PageLayout } from "@/components/PageLayout";
+import { useCampusOS } from "@/contexts/CampusOSContext";
 import {
   MessageSquare, Scissors, CheckCircle2, ClipboardList,
   Upload, Mic, Send, BookOpen, ChevronRight,
@@ -36,14 +37,17 @@ const ELIGIBILITY_OPTIONS = [
 ];
 
 export default function PolicyNavigator() {
+  const { policyDocuments } = useCampusOS();
   const [mode, setMode] = useState<Mode>("chat");
-  const [contextText, setContextText] = useState("");
-  const [fileName, setFileName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Derive context text from all active policy documents uploaded by admin
+  const activeDocs = policyDocuments.filter(d => d.active);
+  const contextText = activeDocs.map(d => `--- Document: ${d.name} ---\n${d.text}`).join("\n\n");
 
   const [messages, setMessages] = useState<Message[]>([{
     id: "1", sender: "ai",
-    text: "Hello! I am the Campus Policy Navigator. Upload a policy document (PDF) to get started, then ask me anything.",
+    text: "Hello! I am the Campus Policy Navigator. Ask me anything about official campus policies.",
   }]);
   const [chatInput, setChatInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -65,20 +69,6 @@ export default function PolicyNavigator() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
-    const file = e.target.files[0];
-    setFileName(file.name);
-    setIsLoading(true);
-    const text = await extractTextFromPDF(file);
-    setContextText(text);
-    setIsLoading(false);
-    setMessages((prev) => [...prev, {
-      id: Date.now().toString(), sender: "ai",
-      text: `✓ "${file.name}" loaded. All 4 modes are now active — ask me anything!`,
-    }]);
-  };
-
   const handleSendChat = async () => {
     if (!chatInput.trim()) return;
     const userMsg: Message = { id: Date.now().toString(), sender: "user", text: chatInput };
@@ -87,6 +77,8 @@ export default function PolicyNavigator() {
     setIsLoading(true);
 
     const systemPrompt = `You are a campus policy assistant. Answer using ONLY the document text provided.
+If the answer cannot be found in the document text, you MUST set "answer" to "I could not find this information in the uploaded policy documents." and "is_in_document" to false, and leave "simplified_version" and "source_section" empty.
+Do NOT hallucinate or invent policies.
 Return ONLY this JSON:
 {"answer":"clear plain English answer","simplified_version":"same answer rewritten simply (Grade 8 level)","source_section":"approximate section or page reference","confidence":0,"is_in_document":true,"follow_up_questions":["q1","q2"],"important_caveat":null}
 Document:\n${contextText || "No document loaded."}`;
@@ -103,7 +95,7 @@ Document:\n${contextText || "No document loaded."}`;
     } catch {
       setMessages((prev) => [...prev, {
         id: (Date.now() + 1).toString(), sender: "ai",
-        text: "Sorry, I encountered an error. Please try again.",
+        text: "I could not find this information in the uploaded policy documents.",
       }]);
     } finally {
       setIsLoading(false);
@@ -138,8 +130,11 @@ Document:\n${contextText || "No document loaded."}`;
     if (!cgpa && !attendance) return;
     setIsLoading(true); setEligibilityResult(null);
     const doc = contextText ? `\n\nPolicy Document:\n${contextText}` : "";
-    const prompt = `You are a campus eligibility checker. Return ONLY JSON:
-{"eligible":true,"reason":"one sentence","policy_reference":"section or General Policy","missing_requirements":[],"recommendation":"one sentence"}${doc}`;
+    const prompt = `You are a campus eligibility checker. Answer using ONLY the document text provided.
+If the eligibility requirements or details cannot be verified from the document text, you MUST return:
+{"eligible":false,"reason":"I could not find this information in the uploaded policy documents.","policy_reference":"N/A","missing_requirements":[],"recommendation":"Please contact an administrator."}
+Otherwise, return ONLY JSON:
+{"eligible":true,"reason":"one sentence explanation","policy_reference":"section or General Policy","missing_requirements":[],"recommendation":"one sentence"}${doc}`;
     const userMsg = `Check eligibility for: ${checkFor}\nCGPA: ${cgpa||"N/A"}\nAttendance: ${attendance||"N/A"}%\nFamily Income: ₹${income||"N/A"}\nYear: ${year||"N/A"}`;
     try {
       const raw = await callGPT(prompt, userMsg);
@@ -147,11 +142,11 @@ Document:\n${contextText || "No document loaded."}`;
       setEligibilityResult(parsed);
     } catch {
       setEligibilityResult({
-        eligible: Number(cgpa) >= 6.5 && Number(attendance) >= 75,
-        reason: "Based on standard eligibility criteria.",
-        policy_reference: "General Academic Policy",
+        eligible: false,
+        reason: "I could not find this information in the uploaded policy documents.",
+        policy_reference: "N/A",
         missing_requirements: [],
-        recommendation: "Consult your academic advisor for confirmation.",
+        recommendation: "Please contact an administrator.",
       });
     } finally { setIsLoading(false); }
   };
@@ -160,7 +155,10 @@ Document:\n${contextText || "No document loaded."}`;
     if (!procInput.trim()) return;
     setIsLoading(true); setProcResult(null);
     const doc = contextText ? `\n\nPolicy Document:\n${contextText}` : "";
-    const prompt = `You are a campus procedure guide. Return ONLY JSON:
+    const prompt = `You are a campus procedure guide. Answer using ONLY the document text provided.
+If the procedure cannot be found in the document text, you MUST return:
+{"steps":["I could not find this information in the uploaded policy documents."],"notes":"Please contact an administrator."}
+Otherwise, return ONLY JSON:
 {"steps":["Step 1: ...","Step 2: ..."],"notes":"any important note or deadline"}${doc}`;
     try {
       const raw = await callGPT(prompt, `How do I: ${procInput}`);
@@ -168,8 +166,8 @@ Document:\n${contextText || "No document loaded."}`;
       setProcResult(parsed);
     } catch {
       setProcResult({
-        steps: ["Step 1: Visit the relevant office.", "Step 2: Fill in the required form.", "Step 3: Submit with supporting documents.", "Step 4: Collect acknowledgment slip."],
-        notes: "Confirm specific requirements with your department.",
+        steps: ["I could not find this information in the uploaded policy documents."],
+        notes: "Please contact an administrator.",
       });
     } finally { setIsLoading(false); }
   };
@@ -185,59 +183,50 @@ Document:\n${contextText || "No document loaded."}`;
           <p className="text-sm text-muted-foreground mt-1">AI-powered campus policy assistant — chat, simplify, check eligibility, find procedures.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-          {/* ── Left: mode tabs + PDF upload ── */}
-          <div className="space-y-4">
-            <Card className="bg-white border-border shadow-sm rounded-xl overflow-hidden">
-              <div className="p-4 border-b border-border">
-                <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">Modes</p>
-                <div className="space-y-1">
-                  {TABS.map(({ id, label, Icon }) => (
-                    <button key={id} onClick={() => setMode(id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left ${
-                        mode === id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
-                      }`}>
-                      <Icon className={`w-4 h-4 shrink-0 ${mode === id ? "text-primary-foreground" : "text-muted-foreground"}`} strokeWidth={1.75} />
-                      <span className="font-display font-black uppercase tracking-wide text-xs">{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* PDF Upload */}
-              <div className="p-4">
-                <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">Document</p>
-                <input type="file" id="pdf-upload" className="hidden" accept="application/pdf" onChange={handleFileUpload} />
-                <label htmlFor="pdf-upload" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:border-primary hover:text-primary cursor-pointer transition-colors">
-                  <Upload className="w-4 h-4" strokeWidth={1.75} />
-                  <span className="text-xs font-mono">Upload PDF</span>
-                </label>
-                {fileName && (
-                  <div className="mt-2 flex items-center gap-1.5 px-2 py-1.5 bg-emerald-500/5 border border-emerald-500/20 rounded-lg">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[9px] font-mono text-emerald-600 truncate">{fileName}</p>
-                  </div>
-                )}
-              </div>
-            </Card>
-
-            {/* Usage tips */}
-            <Card className="bg-white border-border shadow-sm rounded-xl">
-              <div className="p-4">
-                <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">Quick Ask</p>
-                <div className="space-y-1.5">
-                  {["Can I install an AC?", "Visitor timing rules?", "Fine for late fee?", "Attendance shortage appeal"].map((q) => (
-                    <button key={q} onClick={() => { setMode("chat"); setChatInput(q); }}
-                      className="w-full text-left text-[10px] text-muted-foreground hover:text-primary px-2 py-1.5 rounded-lg hover:bg-secondary transition-colors flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 shrink-0" />
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </Card>
+        {policyDocuments.length === 0 ? (
+          <div className="text-center py-16 bg-white border border-border rounded-xl p-8 shadow-sm">
+            <BookOpen className="w-10 h-10 mx-auto mb-4 text-muted-foreground opacity-30" strokeWidth={1.5} />
+            <p className="font-display font-black uppercase tracking-wide text-foreground">No policy documents have been uploaded by the administration.</p>
+            <p className="text-sm text-muted-foreground mt-2">Please contact an administrator.</p>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+            {/* ── Left: mode tabs ── */}
+            <div className="space-y-4">
+              <Card className="bg-white border-border shadow-sm rounded-xl overflow-hidden">
+                <div className="p-4">
+                  <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">Modes</p>
+                  <div className="space-y-1">
+                    {TABS.map(({ id, label, Icon }) => (
+                      <button key={id} onClick={() => setMode(id)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left ${
+                          mode === id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+                        }`}>
+                        <Icon className={`w-4 h-4 shrink-0 ${mode === id ? "text-primary-foreground" : "text-muted-foreground"}`} strokeWidth={1.75} />
+                        <span className="font-display font-black uppercase tracking-wide text-xs">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+
+              {/* Usage tips */}
+              <Card className="bg-white border-border shadow-sm rounded-xl">
+                <div className="p-4">
+                  <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">Quick Ask</p>
+                  <div className="space-y-1.5">
+                    {["Can I install an AC?", "Visitor timing rules?", "Fine for late fee?", "Attendance shortage appeal"].map((q) => (
+                      <button key={q} onClick={() => { setMode("chat"); setChatInput(q); }}
+                        className="w-full text-left text-[10px] text-muted-foreground hover:text-primary px-2 py-1.5 rounded-lg hover:bg-secondary transition-colors flex items-center gap-2">
+                        <ChevronRight className="w-3 h-3 shrink-0" />
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </div>
 
           {/* ── Right: mode content ── */}
           <div className="lg:col-span-3">
@@ -314,10 +303,9 @@ Document:\n${contextText || "No document loaded."}`;
                         </button>
                         <Input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
                           onKeyDown={(e) => e.key === "Enter" && handleSendChat()}
-                          placeholder={contextText ? "Ask anything about the policy…" : "Upload a PDF first…"}
-                          disabled={!contextText}
+                          placeholder="Ask anything about the policies…"
                           className="flex-1 bg-background border-border focus-visible:ring-primary" />
-                        <Button onClick={handleSendChat} disabled={!contextText || !chatInput.trim()}
+                        <Button onClick={handleSendChat} disabled={!chatInput.trim()}
                           className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-4">
                           <Send className="w-4 h-4" strokeWidth={1.75} />
                         </Button>
@@ -498,6 +486,7 @@ Document:\n${contextText || "No document loaded."}`;
             </Card>
           </div>
         </div>
+      )}
       </div>
     </PageLayout>
   );

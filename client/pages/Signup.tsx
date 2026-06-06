@@ -98,7 +98,7 @@ export default function Signup() {
       await signup(formData.email, formData.password, formData.name, selectedRole);
 
       // Navigate to appropriate dashboard based on role
-      const redirectPath = selectedRole === 'student' ? '/dashboard2' : '/dashboard';
+      const redirectPath = selectedRole === 'student' ? '/dashboard2' : '/dashboard2';
       navigate(redirectPath);
     } catch (error: any) {
       setError(error.message || "Failed to create account");

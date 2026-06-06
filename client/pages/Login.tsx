@@ -7,44 +7,57 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
+// Demo credential hints shown on the page
+const DEMO_ACCOUNTS = [
+  { role: "Student",  email: "student@campus.edu",  password: "password123", emoji: "👨‍🎓" },
+  { role: "Admin",    email: "admin@campus.edu",    password: "admin123",    emoji: "🛡️" },
+  { role: "Teacher",  email: "teacher@campus.edu",  password: "teacher123",  emoji: "👨‍🏫" },
+];
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<
-    "teacher" | "student" | null
-  >(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!selectedRole) {
-      setError("Please select your role (Teacher or Student) before signing in.");
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      await login(email, password);
-
-      // Store the selected role for this user
-      // Using mock user ID '123' since auth is removed
-      localStorage.setItem(`user_123_role`, selectedRole);
-
-      // Navigate to appropriate dashboard based on role
-      const redirectPath = selectedRole === 'student' ? '/dashboard2' : '/dashboard';
-      navigate(redirectPath);
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in");
-    } finally {
+      login(email, password);
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in");
       setIsLoading(false);
+      return;
     }
+
+    // login() is synchronous in the mock — currentUser is set after the call.
+    // We read the role from the credential table directly to avoid stale closure.
+    const ROLE_MAP: Record<string, string> = {
+      "admin@campus.edu": "admin",
+      "teacher@campus.edu": "teacher",
+    };
+    const role = ROLE_MAP[email.trim().toLowerCase()] ?? "student";
+
+    if (role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/dashboard2");
+    }
+
+    setIsLoading(false);
+  };
+
+  // Quick-fill helper for demo account buttons
+  const fillDemo = (demoEmail: string, demoPassword: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setError("");
   };
 
   return (
@@ -154,53 +167,32 @@ export default function Login() {
                 </p>
               </motion.div>
 
-              {/* Role Selection */}
+              {/* Demo Accounts */}
               <motion.div
-                className="space-y-4"
+                className="space-y-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
               >
-                <p className="text-center lg:text-left text-gray-700 font-medium">
-                  Choose your role
+                <p className="text-center lg:text-left text-gray-700 font-medium text-sm">
+                  Demo Accounts — click to fill
                 </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <motion.button
-                    type="button"
-                    onClick={() => setSelectedRole("teacher")}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 ${selectedRole === "teacher"
-                      ? "border-purple-500 bg-purple-50 text-purple-700"
-                      : "border-gray-200 bg-white/60 text-gray-700 hover:border-purple-300 hover:bg-purple-25"
-                      }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">👨‍🏫</div>
-                      <div className="font-semibold">Teacher</div>
-                      <div className="text-sm opacity-75">
-                        Manage classes & students
-                      </div>
-                    </div>
-                  </motion.button>
-                  <motion.button
-                    type="button"
-                    onClick={() => setSelectedRole("student")}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 ${selectedRole === "student"
-                      ? "border-purple-500 bg-purple-50 text-purple-700"
-                      : "border-gray-200 bg-white/60 text-gray-700 hover:border-purple-300 hover:bg-purple-25"
-                      }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">👨‍🎓</div>
-                      <div className="font-semibold">Student</div>
-                      <div className="text-sm opacity-75">
-                        Access courses & learning
-                      </div>
-                    </div>
-                  </motion.button>
+                <div className="grid grid-cols-3 gap-2">
+                  {DEMO_ACCOUNTS.map((acc) => (
+                    <motion.button
+                      key={acc.role}
+                      type="button"
+                      onClick={() => fillDemo(acc.email, acc.password)}
+                      className="p-3 rounded-xl border-2 border-gray-200 bg-white/60 text-gray-700 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 text-left"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <div className="text-lg mb-1">{acc.emoji}</div>
+                      <div className="font-semibold text-xs">{acc.role}</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5 truncate">{acc.email}</div>
+                      <div className="text-[10px] text-purple-500 font-mono">{acc.password}</div>
+                    </motion.button>
+                  ))}
                 </div>
               </motion.div>
 

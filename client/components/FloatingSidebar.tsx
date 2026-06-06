@@ -47,7 +47,8 @@ interface NavSection {
   items: NavItem[];
 }
 
-const NAV_SECTIONS: NavSection[] = [
+// All possible nav sections — visibility is filtered per role at render time
+const NAV_SECTIONS_STUDENT: NavSection[] = [
   {
     heading: "Modules",
     items: [
@@ -66,13 +67,20 @@ const NAV_SECTIONS: NavSection[] = [
       { id: "anti-ragging", label: "Anti-Ragging",    icon: ShieldAlert,      href: "/anti-ragging" },
       { id: "canteen",      label: "Canteen",          icon: UtensilsCrossed,  href: "/canteen" },
       { id: "scholarships", label: "Scholarships",    icon: Award,            href: "/scholarships" },
-      { id: "agent",        label: "AI Agent",         icon: Bot,              href: "/agent" },
     ],
   },
+];
+
+const NAV_SECTIONS_ADMIN: NavSection[] = [
   {
     heading: "Admin",
     items: [
-      { id: "admin", label: "Admin Panel", icon: LayoutDashboard, href: "/admin" },
+      { id: "admin",             label: "Admin Panel",        icon: LayoutDashboard, href: "/admin" },
+      { id: "admin-grievances",  label: "Grievances",          icon: Flag,            href: "/admin/grievances" },
+      { id: "admin-maintenance", label: "Maintenance",         icon: Wrench,          href: "/admin/maintenance" },
+      { id: "admin-lostfound",   label: "Lost & Found",        icon: ScanSearch,      href: "/admin/lost-found" },
+      { id: "admin-policy",      label: "Policy",              icon: BookOpen,        href: "/admin/policy" },
+      { id: "admin-agent",       label: "AI Agent",            icon: Bot,             href: "/agent" },
     ],
   },
 ];
@@ -85,6 +93,11 @@ export const FloatingSidebar = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { logout, currentUser } = useAuth();
+  const userRole = currentUser?.role ?? "student";
+
+  // Pick sections based on role
+  const NAV_SECTIONS =
+    userRole === "admin" ? NAV_SECTIONS_ADMIN : NAV_SECTIONS_STUDENT;
 
   const userName =
     currentUser?.displayName || currentUser?.email?.split("@")[0] || "User";
@@ -97,15 +110,13 @@ export const FloatingSidebar = ({
 
   const isActive = (href: string) => location.pathname === href;
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      if (currentUser) localStorage.removeItem(`user_${currentUser.uid}_role`);
-      await logout();
+      logout();
     } catch {
       /* ignore */
-    } finally {
-      navigate("/login");
     }
+    navigate("/");
   };
 
   return (
