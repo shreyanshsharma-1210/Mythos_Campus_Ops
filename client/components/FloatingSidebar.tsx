@@ -152,7 +152,7 @@ export const FloatingSidebar = ({
                 >
                   <p className="text-[15px] font-display font-black text-foreground uppercase tracking-wide leading-none whitespace-nowrap">
                     Campus
-                    <span className="text-primary">OS</span>
+                    <span className="text-primary">Ops</span>
                   </p>
                   <p className="text-[8px] font-mono text-muted-foreground tracking-widest uppercase mt-0.5 whitespace-nowrap">
                     v2.0 · ONLINE

@@ -211,7 +211,7 @@ const CampusDashboardWrapper: React.FC<{ children?: React.ReactNode }> = ({ chil
                 {/* Central Heading */}
                 <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-auto flex flex-col items-center">
                     <h1 className="text-4xl md:text-6xl font-display font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50 uppercase flex items-center gap-3 drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
-                        CAMPUS<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]">OS</span>
+                        CAMPUS<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]">OPS</span>
                     </h1>
                     <div className="h-px w-full max-w-[120px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mt-1"></div>
                     <p className="text-[10px] md:text-xs font-mono font-bold text-cyan-200/50 tracking-[0.3em] mt-1.5 uppercase text-center">

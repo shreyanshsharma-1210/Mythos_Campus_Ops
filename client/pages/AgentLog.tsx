@@ -252,7 +252,7 @@ export default function AgentLog() {
               </div>
               <div>
                 <h1 className="text-2xl font-black uppercase tracking-tight text-foreground">
-                  Campus<span className="text-primary">OS</span> Agent
+                  Campus<span className="text-primary">Ops</span> Agent
                 </h1>
                 <p className="text-xs font-mono text-muted-foreground tracking-widest uppercase mt-0.5">
                   LangGraph · Azure OpenAI · ReAct Loop
