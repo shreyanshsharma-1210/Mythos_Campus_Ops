@@ -144,21 +144,6 @@ CampusOS consolidates campus activities into a single, cohesive interface. It ac
    ```
    Open [http://localhost:5173/](http://localhost:5173/) in your browser.
 
----
-
-## 🔐 Demo Credentials
-
-Use the preconfigured demo accounts on the login screen:
-
-* **Student:**
-  * **Email:** `student@campus.edu`
-  * **Password:** `password123`
-* **Admin:**
-  * **Email:** `admin@campus.edu`
-  * **Password:** `admin123`
-* **Teacher:**
-  * **Email:** `teacher@campus.edu`
-  * **Password:** `password123`
 
 ---
 

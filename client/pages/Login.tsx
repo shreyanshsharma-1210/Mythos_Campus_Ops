@@ -167,35 +167,6 @@ export default function Login() {
                 </p>
               </motion.div>
 
-              {/* Demo Accounts */}
-              <motion.div
-                className="space-y-3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
-              >
-                <p className="text-center lg:text-left text-gray-700 font-medium text-sm">
-                  Demo Accounts — click to fill
-                </p>
-                <div className="grid grid-cols-3 gap-2">
-                  {DEMO_ACCOUNTS.map((acc) => (
-                    <motion.button
-                      key={acc.role}
-                      type="button"
-                      onClick={() => fillDemo(acc.email, acc.password)}
-                      className="p-3 rounded-xl border-2 border-gray-200 bg-white/60 text-gray-700 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 text-left"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <div className="text-lg mb-1">{acc.emoji}</div>
-                      <div className="font-semibold text-xs">{acc.role}</div>
-                      <div className="text-[10px] text-gray-500 mt-0.5 truncate">{acc.email}</div>
-                      <div className="text-[10px] text-purple-500 font-mono">{acc.password}</div>
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-
               {/* Login Form Glass Container */}
               <motion.div
                 className="bg-white/60 backdrop-blur-lg rounded-3xl p-8 border border-purple-200/50 shadow-2xl"
