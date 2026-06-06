@@ -14,10 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Poppins', 'Inter', 'sans-serif'],
         display: ['Rajdhani', 'sans-serif'],
         mono: ['"Share Tech Mono"', 'monospace'],
-        poppins: ['Poppins', 'sans-serif'],
       },
       backgroundColor: {
         'app': '#fcf8f5',

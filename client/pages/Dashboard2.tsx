@@ -86,33 +86,33 @@ export default function Dashboard2() {
   const [quests, setQuests] = useState<Quest[]>([
     {
       id: '1',
-      type: 'WORLD',
-      title: 'GYM DUNGEON',
-      subtitle: 'Strength Training',
-      description: 'Enter the Iron Temple (Campus Gym) and complete a 45m workout session to increase STR.',
-      reward: '150 XP + STR Boost',
-      duration: '0/1',
+      type: 'DAILY',
+      title: 'ATTENDANCE CHECK',
+      subtitle: 'Academic Intelligence',
+      description: 'Review your attendance across all enrolled subjects. Flag any course falling below 75% before the next sync.',
+      reward: '200 XP + INT Boost',
+      duration: '0/5',
       status: 'active'
     },
     {
       id: '2',
       type: 'DAILY',
-      title: 'DEEP WORK SESSION',
-      subtitle: 'Algorithm Mastery',
-      description: 'Complete 2 hours of focused study on LeetCode or Data Structures.',
-      reward: '300 XP + INT Boost',
-      duration: '02:00:00',
+      title: 'POLICY QUERY',
+      subtitle: 'Rulebook Navigator',
+      description: 'Consult the AI-powered Policy Navigator on your pending academic or hostel regulation query.',
+      reward: '150 XP + KAR Boost',
+      duration: '01:00:00',
       status: 'accepted'
     },
     {
       id: '3',
       type: 'URGENT',
-      title: 'FIX ANOMALY',
-      subtitle: 'Broken Printer - Library 2F',
-      description: 'A community rift has been detected. Report or fix the broken equipment to restore order.',
+      title: 'REPORT ANOMALY',
+      subtitle: 'Campus Infrastructure',
+      description: 'A facility anomaly has been flagged near your zone. File a maintenance report immediately to restore order.',
       reward: '500 XP + KAR Boost',
       isUrgent: true,
-      duration: '00:45:00',
+      duration: '00:30:00',
       status: 'active'
     }
   ]);
@@ -199,7 +199,12 @@ export default function Dashboard2() {
   // Removed unused ClassCard and related legacy state.
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Hero Background */}
+      <div className="absolute top-0 left-0 w-full h-[850px] pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[url('/hero-bg.png')] bg-cover bg-center"></div>
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background to-transparent"></div>
+      </div>
       {!isMobile && (
         <FloatingSidebar
           isCollapsed={isCollapsed}
@@ -217,19 +222,23 @@ export default function Dashboard2() {
         <div className="w-full">
           {/* Sovereign Profile Section */}
           <motion.div
-            className="mb-8 w-full min-h-[600px] rounded-3xl overflow-hidden bg-transparent relative border-none shadow-none"
+            className="mb-8 w-full min-h-[600px] bg-transparent relative border-none shadow-none z-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.05 }}
           >
-            {/* <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-white/20 pointer-events-none"></div> */}
-            {/* <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20"></div> */}
-
             <div className="relative z-10 p-6 h-full">
               {/* <ProfileOverlay /> - Replaced with Full Campus OS Profile */}
 
-              <div className="flex flex-col gap-6 w-full h-full">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[60vh]">
+              <div className="flex flex-col gap-6 w-full h-full relative">
+                {/* CampusOps Title */}
+                <div className="w-full flex justify-center -mt-16 mb-4 z-30 pointer-events-none">
+                  <h1 className="text-2xl md:text-4xl font-black tracking-[0.3em] text-slate-900 uppercase drop-shadow-md">
+                    CAMPUS<span className="text-primary">OPS</span>
+                  </h1>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[60vh]">
                   {/* Status Panel (Left) */}
                   <section className="hidden lg:flex lg:col-span-3 h-full animate-[fadeInLeft_0.8s_ease-out]">
                     <StatusPanel profile={profile} />
