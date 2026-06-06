@@ -296,6 +296,36 @@ export default function Login() {
                   </motion.div>
                 </form>
 
+                {/* Demo Account Quick Fill */}
+                <motion.div
+                  className="mt-6"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 }}
+                >
+                  <p className="text-gray-500 text-xs text-center mb-3 uppercase tracking-wide font-medium">
+                    Quick Demo Access
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    {DEMO_ACCOUNTS.map((account) => (
+                      <motion.button
+                        key={account.role}
+                        type="button"
+                        onClick={() => fillDemo(account.email, account.password)}
+                        className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-purple-50 border border-purple-100 hover:bg-purple-100 hover:border-purple-300 transition-all duration-200 cursor-pointer group"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        title={`Login as ${account.role}\n${account.email}`}
+                      >
+                        <span className="text-2xl">{account.emoji}</span>
+                        <span className="text-xs font-semibold text-purple-700 group-hover:text-purple-900">
+                          {account.role}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+
                 {/* Sign Up Link */}
                 <motion.div
                   className="mt-6 text-center"
