@@ -1,8 +1,8 @@
-# CampusOS
+# Campus Ops
 
 <div align="center">
 
-<h3>🎓 CampusOS — AI-Powered Campus Operations Platform ⚡</h3>
+<h3>🎓 Campus Ops — AI-Powered Campus Operations Platform ⚡</h3>
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -16,7 +16,7 @@
 ---
 
 ## 📋 Executive Summary
-CampusOS is an AI-powered operations nervous system designed for modern universities. The platform consolidates student services, administrative tasks, policy navigation, lost-and-found tracking, and campus intelligence modules into a unified dashboard. By leveraging large language models (LLMs) and computer vision, CampusOS automates administrative workflows, resolves inquiries instantaneously, and reduces response times for grievances and maintenance issues.
+Campus Ops is an AI-powered operations nervous system designed for modern universities. The platform consolidates student services, administrative tasks, policy navigation, lost-and-found tracking, and campus intelligence modules into a unified dashboard. By leveraging large language models (LLMs) and computer vision, Campus Ops automates administrative workflows, resolves inquiries instantaneously, and reduces response times for grievances and maintenance issues.
 
 ---
 
@@ -30,7 +30,7 @@ Modern campus administration is plagued by:
 ---
 
 ## 🔮 Platform Vision
-CampusOS consolidates campus activities into a single, cohesive interface. It acts as a real-time operational hub where student reports are automatically categorized, policies are queryable in plain English, and lost item matches are calculated instantly.
+Campus Ops consolidates campus activities into a single, cohesive interface. It acts as a real-time operational hub where student reports are automatically categorized, policies are queryable in plain English, and lost item matches are calculated instantly.
 
 ---
 
