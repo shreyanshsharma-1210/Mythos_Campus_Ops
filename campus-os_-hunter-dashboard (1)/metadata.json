@@ -1,0 +1,9 @@
+
+{
+  "name": "Campus OS: Hunter Dashboard",
+  "description": "A futuristic, glassmorphism-styled gamification dashboard for student life tracking, featuring 3D character visualization and quest tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}

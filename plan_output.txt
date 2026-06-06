@@ -1,0 +1,254 @@
+CampusOS
+Frontend-Only Master Plan & Master Prompt
+AI for Campus Operations — Hackathon Submission
+1. Project Overview & Constraints
+This document defines exactly what to build, what to remove, what to keep, and the master prompt to feed into any AI code generator (Cursor, Copilot, ChatGPT, etc.) to execute the frontend refactor of CampusOS for the hackathon.
+Hard Constraints:
+Frontend only — no backend code to be written
+No Firebase — all data is mock/static JSON or localStorage
+No AI Proctoring module — cloned separately from GitHub
+LLM: OpenAI GPT-4.1-mini via API calls from frontend
+Stack stays: React + Vite + TypeScript + TailwindCSS + Radix UI
+Submission is a VIDEO — build for demo impressiveness first
+2. Modules to REMOVE Completely
+Delete or comment out the following files/routes from the CampusOS codebase. Do not spend any time on these.
+File / Module
+Reason to Remove
+ComputerVision.tsx
+Proctoring — cloning separately
+AITestArena.tsx + TestArena.tsx
+Proctoring dependency
+TestTaking.tsx + CodeTest.tsx
+Not part of PS modules
+TestManagement.tsx
+Teacher quiz builder — not needed
+TeacherQuizAnalytics.tsx
+Quiz-specific, not campus ops
+AIVideoGenerator.tsx
+Out of scope for PS
+AILessonStudio.tsx + AILessonStudioNew.tsx
+Out of scope for PS
+CareerAssessment.tsx
+Unrelated to PS themes
+AchievementsPage.tsx (Hunter Vault)
+RPG layer — cut for clarity
+All Firebase imports/configs
+Replaced with mock data
+3. Modules to KEEP & Repurpose
+These existing files map directly to the PS modules. Repurpose, don't rewrite.
+Existing File
+Repurposed As
+PS Module
+Chatbot.tsx
+Policy Navigator chat UI
+PS3
+Community.tsx
+Lost & Found feed + report form
+PS4
+Analytics.tsx
+Maintenance dashboard charts
+PS2
+Calendar.tsx
+Grievance deadline tracker
+PS1
+Dashboard.tsx
+Unified CampusOS home hub
+All PS
+ClassroomsPage.tsx
+Department/category view
+PS1 + PS2
+4. New Screens to Build (Frontend Only)
+Build these as new .tsx files. All data is mocked with JSON arrays — no API calls except OpenAI for the chatbot.
+4.1 — PS1: Grievance Triage System
+GrievanceSubmit.tsx — Student complaint form
+Fields: Title, Category dropdown, Description, Urgency (1-5 stars), optional photo upload (preview only)
+On submit: GPT-4.1-mini call classifies category + urgency + sentiment score
+Show animated 'AI Processing...' state then result card
+GrievanceDashboard.tsx — Admin view
+Kanban board: Pending / In Review / Resolved columns
+Each card shows: category tag, urgency badge, AI sentiment score, SLA timer countdown
+Filter by department, urgency, date
+Heatmap panel: which departments get most complaints (Recharts BarChart)
+4.2 — PS2: Maintenance Dashboard
+MaintenanceReport.tsx — Student report form
+Fields: Location (block + room), Issue type, Description, Photo upload (preview with OpenCV-style filter effect via CSS)
+AI severity scoring on submit: GPT-4.1-mini returns severity 1-5 + category
+Animated severity meter reveal
+MaintenanceDashboard.tsx — Warden/admin view
+Priority queue sorted by AI severity score
+Hostel block heatmap (D3.js grid — color intensity = issue density)
+Staff assignment cards with status toggle
+Trend chart: issues over time per block (Recharts LineChart)
+4.3 — PS3: Policy Navigator Chatbot
+PolicyNavigator.tsx — Full-screen chat interface
+Upload PDF button (reads file, extracts text client-side via pdf.js)
+Chat UI with user/assistant bubbles
+Every AI answer includes source citation tag: 'From: Hostel Rules, Page 4'
+Confidence score badge on each answer (0-100%)
+Suggested questions chips at bottom
+Voice input via Web Speech API (navigator.speechRecognition)
+GPT-4.1-mini system prompt: RAG-style, only answer from provided document text
+4.4 — PS4: Lost & Found Matcher
+LostReport.tsx — Report a lost item
+Fields: Item name, description, last seen location, date, photo upload
+Photo preview with edge detection visual effect (CSS filter: contrast+grayscale)
+FoundReport.tsx — Report a found item
+Same form + mark location on campus mini-map (SVG clickable map)
+MatchFeed.tsx — Live matches feed
+Cards showing: Lost item vs Found item side by side
+AI match confidence score badge (call GPT-4.1-mini with both descriptions)
+'Claim Match' button → generates OTP code (mock)
+Filter by: category, location, date, confidence threshold
+HeatmapView.tsx — Campus lost item hotspots
+D3.js rendered SVG campus map with hotspot circles
+Size of circle = number of lost items in that zone
+5. Unified CampusOS Home Dashboard
+This is the WOW screen — shown first in the video. Shows all 4 PS modules as live widgets.
+Top stats bar: Total Grievances | Open Maintenance | Policy Queries Today | Matches Found
+4 module cards with live mock counters and sparklines
+Notification feed on right: recent AI actions across all modules
+Quick-action FAB (floating button) to report any issue from anywhere
+Dark theme by default — matches existing CampusOS RPG aesthetic
+6. OpenAI GPT-4.1-mini Integration Pattern
+Since there is no backend, all OpenAI calls go directly from the React frontend. Store the API key in .env.local as VITE_OPENAI_API_KEY. Never commit this file.
+// src/lib/openai.ts
+const callGPT = async (systemPrompt: string, userMessage: string) => {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-4.1-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ],
+      max_tokens: 500
+    })
+  });
+  const data = await res.json();
+  return data.choices[0].message.content;
+};
+System Prompts per Module
+Module
+GPT-4.1-mini System Prompt
+Grievance Triage
+You are a grievance classification AI. Given a student complaint, return JSON: { category: string, urgency: 1-5, sentiment: 'positive'|'neutral'|'negative', department: string, summary: string }. Only return JSON, no other text.
+Maintenance
+You are a maintenance severity AI. Given an issue description, return JSON: { severity: 1-5, category: 'electrical'|'plumbing'|'furniture'|'civil', priority: 'critical'|'high'|'medium'|'low', estimatedTime: string }. Only return JSON.
+Policy Navigator
+You are a campus policy assistant. Answer ONLY using the document text provided. End every answer with: SOURCE: [document name, approximate section]. If the answer is not in the document, say 'This information is not in the provided policy documents.'
+Lost & Found
+You are a lost and found matching AI. Given two item descriptions, return JSON: { matchScore: 0-100, matchReason: string, confidence: 'high'|'medium'|'low' }. Only return JSON.
+7. THE MASTER PROMPT
+Copy-paste this entire prompt into Cursor AI / ChatGPT / Claude to execute the refactor. Fill in [REPO PATH] with your local path.
+You are an expert React + TypeScript + TailwindCSS developer.
+I have an existing platform called CampusOS at [REPO PATH].
+Your job is to refactor it into a focused hackathon demo.
+== HARD RULES ==
+- Frontend only. No backend. No Firebase. No server.
+- All data is mock JSON (hardcoded arrays or localStorage).
+- LLM: OpenAI GPT-4.1-mini. API key from import.meta.env.VITE_OPENAI_API_KEY.
+- Keep: React, Vite, TypeScript, TailwindCSS, Radix UI, Recharts, D3.js.
+- Remove: all Firebase imports, proctoring files, video generator, lesson studio.
+== DELETE THESE FILES ==
+ComputerVision.tsx, AITestArena.tsx, TestArena.tsx, TestTaking.tsx,
+CodeTest.tsx, TestManagement.tsx, TeacherQuizAnalytics.tsx,
+AIVideoGenerator.tsx, AILessonStudio.tsx, AILessonStudioNew.tsx,
+CareerAssessment.tsx, AchievementsPage.tsx
+Remove all Firebase imports from remaining files.
+== BUILD THESE NEW SCREENS ==
+1. GrievanceSubmit.tsx — complaint form + GPT triage on submit
+2. GrievanceDashboard.tsx — kanban + Recharts heatmap
+3. MaintenanceReport.tsx — issue form + photo preview + AI severity
+4. MaintenanceDashboard.tsx — priority queue + D3 block heatmap
+5. PolicyNavigator.tsx — chat UI + pdf.js upload + GPT RAG answers
+6. LostReport.tsx — lost item form + photo preview
+7. FoundReport.tsx — found item form + SVG campus map
+8. MatchFeed.tsx — side-by-side match cards + GPT confidence score
+9. HeatmapView.tsx — D3 campus hotspot map
+== REPURPOSE EXISTING SCREENS ==
+Dashboard.tsx → unified hub: 4 module stat cards + notification feed
+Chatbot.tsx → PolicyNavigator wrapper (keep UI, change system prompt)
+Community.tsx → LostFound feed layout (keep card UI, change data)
+Analytics.tsx → Maintenance analytics (keep charts, change mock data)
+== OPENAI CALL PATTERN ==
+Create src/lib/openai.ts with callGPT(systemPrompt, userMessage) async function.
+Use fetch() to POST to https://api.openai.com/v1/chat/completions.
+Model: gpt-4.1-mini. Max tokens: 500.
+== DESIGN RULES ==
+- Dark theme (#1E1E2E background, #6C63FF accent, white text)
+- Smooth animations: use framer-motion for card reveals and loading states
+- Show AI processing state: spinning loader + 'Analyzing with AI...' text
+- Every AI response card must show: confidence %, category tag, timestamp
+- Mobile responsive (the demo video will be shot on mobile)
+Start with: 1) create src/lib/openai.ts, 2) build GrievanceSubmit.tsx,
+3) build GrievanceDashboard.tsx, 4) update Dashboard.tsx as unified hub.
+After each file, confirm and move to next.
+8. Target File Structure
+src/
+├── lib/
+│   ├── openai.ts          ← GPT-4.1-mini caller
+│   ├── mockData.ts        ← all fake data for demo
+│   └── pdfExtract.ts      ← pdf.js text extractor
+├── components/
+│   ├── AIBadge.tsx        ← reusable confidence score badge
+│   ├── HeatmapD3.tsx      ← reusable D3 heatmap component
+│   └── AILoadingCard.tsx  ← 'Analyzing...' animation
+├── pages/
+│   ├── Dashboard.tsx      ← unified hub (KEEP + modify)
+│   ├── GrievanceSubmit.tsx    ← NEW
+│   ├── GrievanceDashboard.tsx ← NEW
+│   ├── MaintenanceReport.tsx  ← NEW
+│   ├── MaintenanceDashboard.tsx ← NEW
+│   ├── PolicyNavigator.tsx    ← NEW (wraps Chatbot.tsx)
+│   ├── LostReport.tsx         ← NEW
+│   ├── FoundReport.tsx        ← NEW
+│   ├── MatchFeed.tsx          ← NEW
+│   └── HeatmapView.tsx        ← NEW
+└── .env.local
+    └── VITE_OPENAI_API_KEY=sk-...
+9. Video Shot List (2 Minutes)
+Record in this exact order. Use screen recording + phone camera cutaway for emotional moments.
+Time
+Shot
+What to Show
+0:00-0:10
+Cold open
+4 problems typed on screen, one by one. Music build.
+0:10-0:15
+Title card
+CampusOS logo + tagline animation
+0:15-0:30
+Unified Dashboard
+Scroll through live stat cards, notification feed
+0:30-0:50
+Policy Navigator
+Ask 'Can I keep a pet in hostel?' → AI answers with citation
+0:50-1:05
+Lost & Found
+Upload photo → match found → 87% confidence card reveals
+1:05-1:20
+Grievance Triage
+Submit complaint → AI classifies → kanban card appears
+1:20-1:35
+Maintenance
+Report issue → severity meter fills → D3 heatmap lights up
+1:35-1:50
+Architecture slide
+Clean diagram: React → GPT-4.1-mini → 4 modules
+1:50-2:00
+Closing
+'One OS. Every Problem. Every Campus.' Fade to black.
+10. Build Priority Order
+If time is limited, build in this order. The first 4 are non-negotiable for the video.
+src/lib/openai.ts — core GPT caller (30 mins)
+PolicyNavigator.tsx — easiest, most impressive (1 hr)
+MatchFeed.tsx + LostReport.tsx — most emotional (2 hrs)
+Dashboard.tsx (unified hub) — the WOW opener (1.5 hrs)
+GrievanceSubmit + GrievanceDashboard (1.5 hrs)
+MaintenanceReport + MaintenanceDashboard (2 hrs)
+HeatmapView D3 campus map (1 hr — if time allows)
+"Build for the demo. Polish for the judges. Win for the campus."
