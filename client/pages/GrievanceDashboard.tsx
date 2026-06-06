@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { mockGrievances } from '../lib/mockData';
+import { useCampusOS } from '../contexts/CampusOSContext';
 
 function EscalationBadge({ level, risk }: { level: string; risk: number }) {
   const styles: Record<string, string> = {
@@ -20,7 +20,7 @@ function EscalationBadge({ level, risk }: { level: string; risk: number }) {
 }
 
 export default function GrievanceDashboard() {
-  const [grievances] = useState(mockGrievances);
+  const { grievances } = useCampusOS();
   const [filter, setFilter] = useState<'all' | 'critical'>('all');
 
   const displayed = filter === 'critical'

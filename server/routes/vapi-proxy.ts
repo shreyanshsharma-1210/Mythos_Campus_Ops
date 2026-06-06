@@ -176,7 +176,6 @@ export const handleVapiTest: RequestHandler = async (req, res) => {
         ? "Vapi API connectivity successful from server"
         : "Vapi API connectivity failed from server",
       configured: true,
-      keyLength: privateKey.length,
       responsePreview: responseBody.substring(0, 50),
       errorDetails: errorDetails,
     };

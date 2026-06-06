@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { mockLostItems, mockFoundItems } from '../lib/mockData';
+import { useCampusOS } from '../contexts/CampusOSContext';
 import { callGPT } from '../lib/openai';
 
 function ConfidenceBadge({ score }: { score: number }) {
@@ -33,6 +33,7 @@ function RecoveryBar({ probability }: { probability: number }) {
 }
 
 export default function MatchFeed() {
+  const { lostItems, foundItems } = useCampusOS();
   const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [claimedIds, setClaimedIds] = useState<Set<string>>(new Set());
@@ -40,11 +41,12 @@ export default function MatchFeed() {
 
   useEffect(() => {
     async function evaluateMatches() {
+      setLoading(true);
       const results: any[] = [];
 
-      for (let i = 0; i < Math.min(mockLostItems.length, mockFoundItems.length); i++) {
-        const lost = mockLostItems[i];
-        const found = mockFoundItems[i];
+      for (let i = 0; i < Math.min(lostItems.length, foundItems.length); i++) {
+        const lost = lostItems[i];
+        const found = foundItems[i];
 
         const systemPrompt = `You are a lost and found matching AI. Return ONLY JSON:
 {
@@ -61,14 +63,23 @@ export default function MatchFeed() {
           const parsed = JSON.parse(raw.trim().replace(/```json/g, '').replace(/```/g, ''));
           results.push({ id: `${lost.id}-${found.id}`, lost, found, ...parsed });
         } catch {
+          
+          let score = 50;
+          if (lost.category === found.category) score += 20;
+          const lostWords = lost.item.toLowerCase().split(' ');
+          const foundWords = found.item.toLowerCase().split(' ');
+          const common = lostWords.filter((w: string) => foundWords.includes(w) && w.length > 2);
+          score += common.length * 15;
+          score = Math.min(100, score);
+
           results.push({
             id: `${lost.id}-${found.id}`,
             lost, found,
-            match_score: 87,
-            match_reason: 'Similar description, category, and likely trajectory match.',
-            key_matching_features: ['Similar item type', 'Matching color/material', 'Nearby locations'],
-            confidence: 'high',
-            recommended_action: 'claim',
+            match_score: score,
+            match_reason: score >= 80 ? 'High similarity in item description and category.' : 'Possible match based on category.',
+            key_matching_features: ['Similar item type', 'Nearby locations'],
+            confidence: score >= 85 ? 'high' : score >= 60 ? 'medium' : 'low',
+            recommended_action: score >= 80 ? 'claim' : 'investigate_further',
           });
         }
       }
@@ -77,7 +88,7 @@ export default function MatchFeed() {
       setLoading(false);
     }
     evaluateMatches();
-  }, []);
+  }, [lostItems, foundItems]);
 
   const handleClaim = (matchId: string) => {
     const otp = String(Math.floor(100000 + Math.random() * 900000));
@@ -100,7 +111,7 @@ export default function MatchFeed() {
         {/* Summary bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Active Cases', value: mockLostItems.length, icon: '🔍' },
+            { label: 'Active Cases', value: lostItems.length, icon: '🔍' },
             { label: 'Matches Found', value: matches.length, icon: '🔗' },
             { label: 'Reunited Today', value: 2, icon: '✅' },
             { label: 'Avg Recovery', value: '67%', icon: '📈' },

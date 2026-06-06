@@ -20,6 +20,7 @@ import { DashboardTour } from "@/components/DashboardTour";
 import CampusDashboardWrapper from "@/components/campus-os/CampusDashboardWrapper";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCampusOS } from "../contexts/CampusOSContext";
 import {
   Plus,
   MoreVertical,
@@ -58,6 +59,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 export default function Dashboard2() {
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const { currentUser } = useAuth();
+  const { grievances, maintenanceReports, lostItems, foundItems, notifications } = useCampusOS();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -272,10 +274,10 @@ export default function Dashboard2() {
             {/* Top Stats Bar */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-4">
               {[
-                { title: 'TOTAL GRIEVANCES', value: '124', route: '/grievances/dashboard' },
-                { title: 'OPEN MAINTENANCE', value: '18', route: '/maintenance/dashboard' },
+                { title: 'TOTAL GRIEVANCES', value: grievances.length.toString(), route: '/grievances/dashboard' },
+                { title: 'OPEN MAINTENANCE', value: maintenanceReports.filter(r => r.status === 'Open').length.toString(), route: '/maintenance/dashboard' },
                 { title: 'POLICY QUERIES TODAY', value: '89', route: '/policy' },
-                { title: 'MATCHES FOUND', value: '12', route: '/lost-found' }
+                { title: 'MATCHES FOUND', value: Math.min(lostItems.length, foundItems.length).toString(), route: '/lost-found' }
               ].map((stat, idx) => (
                 <motion.div 
                   key={stat.title}
@@ -349,12 +351,7 @@ export default function Dashboard2() {
                 <h2 className="text-xl font-bold text-foreground mb-6 dashboard-title">RECENT AI ACTIONS</h2>
                 <Card className="bg-white border-border rounded-xl shadow-sm overflow-hidden">
                   <div className="divide-y divide-border">
-                    {[
-                      { id: 1, text: 'AI flagged critical water leak in Block B', time: '2m ago', type: 'maintenance' },
-                      { id: 2, text: 'Lost Blue Bottle matched with 87% confidence', time: '15m ago', type: 'match' },
-                      { id: 3, text: 'New grievance auto-assigned to IT Dept', time: '1h ago', type: 'grievance' },
-                      { id: 4, text: 'Policy Navigator answered 10 queries on Hostel Rules', time: '2h ago', type: 'policy' }
-                    ].map((notif, idx) => (
+                    {notifications.map((notif, idx) => (
                       <motion.div 
                         key={notif.id}
                         initial={{ opacity: 0, x: 20 }}

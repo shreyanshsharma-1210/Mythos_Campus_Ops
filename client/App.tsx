@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { CampusOSProvider } from "./contexts/CampusOSContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicRoute } from "./components/PublicRoute";
 import Index from "./pages/Index";
@@ -25,33 +26,35 @@ import HeatmapView from "./pages/HeatmapView";
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
-      <SidebarProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <CampusOSProvider>
+        <SidebarProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
 
-          <Route path="/dashboard2" element={<ProtectedRoute requiredRole="student"><Dashboard2 /></ProtectedRoute>} />
+            <Route path="/dashboard2" element={<ProtectedRoute requiredRole="student"><Dashboard2 /></ProtectedRoute>} />
 
-          {/* CampusOS Modules */}
-          <Route path="/grievances/submit" element={<GrievanceSubmit />} />
-          <Route path="/grievances/dashboard" element={<GrievanceDashboard />} />
+            {/* CampusOS Modules */}
+            <Route path="/grievances/submit" element={<GrievanceSubmit />} />
+            <Route path="/grievances/dashboard" element={<GrievanceDashboard />} />
 
-          <Route path="/maintenance/report" element={<MaintenanceReport />} />
-          <Route path="/maintenance/dashboard" element={<MaintenanceDashboard />} />
+            <Route path="/maintenance/report" element={<MaintenanceReport />} />
+            <Route path="/maintenance/dashboard" element={<MaintenanceDashboard />} />
 
-          <Route path="/policy" element={<PolicyNavigator />} />
+            <Route path="/policy" element={<PolicyNavigator />} />
 
-          <Route path="/lost" element={<LostReport />} />
-          <Route path="/found" element={<FoundReport />} />
-          <Route path="/lost-found" element={<MatchFeed />} />
-          <Route path="/heatmap" element={<HeatmapView />} />
+            <Route path="/lost" element={<LostReport />} />
+            <Route path="/found" element={<FoundReport />} />
+            <Route path="/lost-found" element={<MatchFeed />} />
+            <Route path="/heatmap" element={<HeatmapView />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </SidebarProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SidebarProvider>
+      </CampusOSProvider>
     </AuthProvider>
   </BrowserRouter>
 );

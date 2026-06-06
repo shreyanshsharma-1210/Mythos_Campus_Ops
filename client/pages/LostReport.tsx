@@ -4,6 +4,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
+import { useCampusOS } from '../contexts/CampusOSContext';
 import { callGPT } from '../lib/openai';
 
 const ITEM_TYPES = [
@@ -29,6 +30,7 @@ const LOADING_STEPS = [
 ];
 
 export default function LostReport() {
+  const { addLostItem, addNotification } = useCampusOS();
   const [itemType, setItemType] = useState('');
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
@@ -74,24 +76,46 @@ Replace all placeholders with real values based on the item details.`;
 
     const userMsg = `Item: ${itemName} (${itemType})\nDescription: ${description}\nLast Seen: ${location}\nDate: ${date}`;
 
+    let parsedResult;
     try {
       const raw = await callGPT(systemPrompt, userMsg);
-      const parsed = JSON.parse(raw.trim().replace(/```json/g, '').replace(/```/g, ''));
-      setResult({ ...parsed, caseId });
+      parsedResult = JSON.parse(raw.trim().replace(/```json/g, '').replace(/```/g, ''));
+      setResult({ ...parsedResult, caseId });
     } catch {
-      setResult({
-        caseId,
+      parsedResult = {
         unique_features: [itemName, location ? `Last seen at ${location}` : 'Unknown location', 'Please check nearby areas'],
         recovery_probability: itemType === 'ID Card' ? 72 : itemType === 'Laptop' ? 58 : 65,
         recommended_action: 'Report to the security desk and post in campus groups immediately.',
         best_zones_to_check: [location || 'Security Desk', 'Lost & Found Box', 'Library Help Desk'],
         urgency_level: 'Medium',
         whatsapp_message: `🚨 LOST: ${itemName}\nLast seen at ${location} on ${date}\nCase ID: ${caseId}\nIf found, please report at campusos.app/found`,
-      });
+      };
+      setResult({ ...parsedResult, caseId });
     } finally {
       clearInterval(stepInterval);
       setLoadingStep(LOADING_STEPS.length - 1);
-      setTimeout(() => setIsProcessing(false), 300);
+      setTimeout(() => {
+        setIsProcessing(false);
+        addLostItem({
+          id: caseId,
+          item: itemName,
+          description: description,
+          location: location,
+          date: date,
+          category: itemType || 'Other',
+          caseId: caseId,
+          recoveryProbability: parsedResult.recovery_probability,
+          posterViews: 0,
+          qrScans: 0,
+          shares: 0,
+          potentialMatches: 0,
+        });
+        addNotification({
+          text: `Lost item reported: ${itemName}. Match radar active.`,
+          time: 'Just now',
+          type: 'match'
+        });
+      }, 300);
     }
   };
 

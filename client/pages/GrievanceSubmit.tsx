@@ -6,6 +6,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { callGPT } from '../lib/openai';
+import { useCampusOS } from '../contexts/CampusOSContext';
 
 const URGENCY_LABELS = ['', '😐 Can Wait', '😟 Annoying', '😠 Affecting Studies', '😤 Urgent', '🚨 Emergency'];
 const CATEGORIES = [
@@ -53,6 +54,8 @@ export default function GrievanceSubmit() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [result, setResult] = useState<any>(null);
 
+  const { grievances, addGrievance, addNotification } = useCampusOS();
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setPhoto(URL.createObjectURL(e.target.files[0]));
@@ -71,47 +74,110 @@ export default function GrievanceSubmit() {
 
     const ticketId = `GRV-2026-${Math.floor(800 + Math.random() * 200)}`;
 
+    // DUPLICATE DETECTION LOGIC
+    const titleWords = title.toLowerCase().split(/\s+/);
+    const descWords = description.toLowerCase().split(/\s+/);
+    let duplicateCount = 1;
+    let affectedStudents = 1;
+    
+    grievances.forEach(g => {
+      if (g.category === category) {
+        const gTitleWords = g.title.toLowerCase().split(/\s+/);
+        const matchCount = titleWords.filter(w => w.length > 3 && gTitleWords.includes(w)).length;
+        if (matchCount >= 2) {
+          duplicateCount++;
+          affectedStudents += (g.affectedStudents || 1);
+        }
+      }
+    });
+
+    const duplicateProbability = duplicateCount > 1 ? Math.min(100, 50 + duplicateCount * 10) : 10;
+
+    // RULE-BASED ESCALATION ENGINE
+    const complaintAge = 0; // New complaint
+    let riskScore = 0;
+    riskScore += urgency * 10;
+    riskScore += duplicateCount * 5;
+    riskScore += Math.min(20, affectedStudents);
+    riskScore = Math.min(100, riskScore);
+
+    let riskLevel = 'Low';
+    if (riskScore >= 80) riskLevel = 'Critical';
+    else if (riskScore >= 60) riskLevel = 'High';
+    else if (riskScore >= 40) riskLevel = 'Medium';
+
     const systemPrompt = `You are a grievance classification AI at an Indian college campus. Given a student complaint, return ONLY this JSON:
 {
   "department": "hostel_warden|academic_office|canteen|electrical|plumbing|security|medical|administration|it_services",
-  "urgency": 1,
   "sentiment": "frustrated|distressed|neutral|angry|urgent",
-  "category": "string",
   "summary": "one sentence summary",
-  "duplicate_probability": 0,
-  "affected_students_estimate": 1,
-  "escalation_risk": 0,
-  "escalation_risk_level": "Low|Medium|High|Critical",
-  "escalation_reason": "one sentence",
   "estimated_resolution_days": 1
 }
 Replace all numeric defaults with real values based on the complaint. Only return JSON.`;
 
     const userMessage = `Title: ${title}\nCategory: ${category}\nDescription: ${description}\nUrgency: ${urgency}/5\nAnonymous: ${isAnonymous}`;
 
+    let parsedResult;
     try {
       const responseText = await callGPT(systemPrompt, userMessage);
       const parsed = JSON.parse(responseText.trim().replace(/```json/g, '').replace(/```/g, ''));
-      setResult({ ...parsed, ticketId });
+      parsedResult = {
+        ...parsed,
+        ticketId,
+        category: category || 'General',
+        urgency,
+        duplicate_probability: duplicateProbability,
+        affected_students_estimate: affectedStudents,
+        escalation_risk: riskScore,
+        escalation_risk_level: riskLevel,
+        escalation_reason: duplicateCount > 1 ? `Escalated due to ${duplicateCount} similar reports and high urgency.` : 'Standard triage assessment based on urgency.'
+      };
+      setResult(parsedResult);
     } catch {
-      setResult({
+      parsedResult = {
         ticketId,
         department: 'Administration',
         urgency: urgency,
         sentiment: 'neutral',
         category: category || 'General',
         summary: `${title} — routed to administration for review.`,
-        duplicate_probability: 12,
-        affected_students_estimate: 1,
-        escalation_risk: urgency >= 4 ? 65 : 20,
-        escalation_risk_level: urgency >= 4 ? 'High' : 'Low',
-        escalation_reason: 'Assessed based on urgency level and category.',
+        duplicate_probability: duplicateProbability,
+        affected_students_estimate: affectedStudents,
+        escalation_risk: riskScore,
+        escalation_risk_level: riskLevel,
+        escalation_reason: duplicateCount > 1 ? `Escalated due to ${duplicateCount} similar reports.` : 'Assessed based on urgency level and category.',
         estimated_resolution_days: 2,
-      });
+      };
+      setResult(parsedResult);
     } finally {
       clearInterval(stepInterval);
       setLoadingStep(LOADING_STEPS.length - 1);
-      setTimeout(() => setIsProcessing(false), 300);
+      setTimeout(() => {
+        setIsProcessing(false);
+        // ADD TO CONTEXT
+        addGrievance({
+          id: ticketId,
+          title,
+          category: parsedResult.category,
+          description,
+          urgency,
+          sentiment: parsedResult.sentiment,
+          department: parsedResult.department,
+          status: 'Pending',
+          slaHours: parsedResult.estimated_resolution_days * 24,
+          duplicateCount,
+          affectedStudents,
+          escalationRisk: riskScore,
+          escalationRiskLevel: riskLevel,
+          escalationReason: parsedResult.escalation_reason,
+          estimatedResolutionDays: parsedResult.estimated_resolution_days
+        });
+        addNotification({
+          text: `New grievance ${ticketId} auto-assigned to ${parsedResult.department.replace(/_/g, ' ')}`,
+          time: 'Just now',
+          type: 'grievance'
+        });
+      }, 300);
     }
   };
 

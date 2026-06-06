@@ -3,9 +3,17 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
+import { useCampusOS } from '../contexts/CampusOSContext';
+import { useToast } from '../hooks/use-toast';
 
 export default function FoundReport() {
+  const { addFoundItem, addNotification } = useCampusOS();
+  const { toast } = useToast();
   const [photo, setPhoto] = useState<string | null>(null);
+  const [itemName, setItemName] = useState('');
+  const [description, setDescription] = useState('');
+  const [location, setLocation] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -13,28 +21,60 @@ export default function FoundReport() {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!itemName || !description || !location) return;
+
+    const id = `LF-2026-F-${Math.floor(400 + Math.random() * 500)}`;
+    
+    addFoundItem({
+      id,
+      item: itemName,
+      description,
+      location,
+      date,
+      category: 'Unknown'
+    });
+
+    addNotification({
+      text: `New found item reported: ${itemName}. Checking for matches...`,
+      time: 'Just now',
+      type: 'match'
+    });
+
+    toast({
+      title: "Found Item Reported",
+      description: "We are running AI matching against lost items.",
+    });
+
+    setItemName('');
+    setDescription('');
+    setLocation('');
+    setPhoto(null);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground p-6 pt-24 pb-24 flex justify-center items-center font-roboto">
       <Card className="w-full max-w-xl bg-card border-border text-card-foreground">
         <CardContent className="pt-6">
           <h2 className="text-2xl font-bold mb-6 font-satoshi uppercase tracking-wider text-foreground">Report Found Item</h2>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm mb-1 text-foreground">Item Name</label>
-              <Input placeholder="e.g., Metal Flask" className="bg-background border-border focus:border-primary text-foreground" />
+              <Input value={itemName} onChange={e => setItemName(e.target.value)} required placeholder="e.g., Metal Flask" className="bg-background border-border focus:border-primary text-foreground" />
             </div>
             <div>
               <label className="block text-sm mb-1 text-foreground">Description</label>
-              <Textarea placeholder="Condition, identifying features..." rows={3} className="bg-background border-border focus:border-primary text-foreground" />
+              <Textarea value={description} onChange={e => setDescription(e.target.value)} required placeholder="Condition, identifying features..." rows={3} className="bg-background border-border focus:border-primary text-foreground" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm mb-1 text-foreground">Location Found</label>
-                <Input placeholder="e.g., Library 2nd Floor" className="bg-background border-border focus:border-primary text-foreground" />
+                <Input value={location} onChange={e => setLocation(e.target.value)} required placeholder="e.g., Library 2nd Floor" className="bg-background border-border focus:border-primary text-foreground" />
               </div>
               <div>
                 <label className="block text-sm mb-1 text-foreground">Date</label>
-                <Input type="date" className="bg-background border-border focus:border-primary text-foreground" />
+                <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-background border-border focus:border-primary text-foreground" />
               </div>
             </div>
 
@@ -57,7 +97,7 @@ export default function FoundReport() {
                 </div>
               )}
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-satoshi uppercase tracking-wider">Submit Report</Button>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-satoshi uppercase tracking-wider">Submit Report</Button>
           </form>
         </CardContent>
       </Card>

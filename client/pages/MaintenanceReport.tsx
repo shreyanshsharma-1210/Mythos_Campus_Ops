@@ -6,8 +6,10 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { callGPT } from '../lib/openai';
+import { useCampusOS } from '../contexts/CampusOSContext';
 
 export default function MaintenanceReport() {
+  const { maintenanceReports, addMaintenanceReport, addNotification } = useCampusOS();
   const [location, setLocation] = useState('');
   const [issueType, setIssueType] = useState('');
   const [description, setDescription] = useState('');
@@ -27,23 +29,67 @@ export default function MaintenanceReport() {
     setIsProcessing(true);
     setResult(null);
 
-    const systemPrompt = `You are a maintenance severity AI. Given an issue description, return JSON: { "severity": 1-5, "category": "electrical"|"plumbing"|"furniture"|"civil", "priority": "critical"|"high"|"medium"|"low", "estimatedTime": "string" }. Only return JSON.`;
+    // PATTERN DETECTION LOGIC
+    // We assume all mock items are recent enough for this hackathon
+    const sameCategoryLocationCount = maintenanceReports.filter(r => r.issueType.toLowerCase() === issueType.toLowerCase() && r.location.toLowerCase().includes(location.split(',')[0].toLowerCase())).length + 1; // +1 for the current
+    
+    const patternDetected = sameCategoryLocationCount >= 3;
+
+    const systemPrompt = `You are a maintenance severity AI. Given an issue description, return JSON: { "severity": 1-5, "category": "electrical"|"plumbing"|"furniture"|"civil", "priority": "critical"|"high"|"medium"|"low", "safetyRisk": true|false, "estimatedRepairHours": 8 }. Only return JSON.`;
     const userMessage = `Location: ${location}\nIssue Type: ${issueType}\nDescription: ${description}`;
 
+    let parsedResult;
     try {
       const responseText = await callGPT(systemPrompt, userMessage);
-      const parsed = JSON.parse(responseText.trim().replace(/```json/g, '').replace(/```/g, ''));
-      setResult(parsed);
+      parsedResult = JSON.parse(responseText.trim().replace(/```json/g, '').replace(/```/g, ''));
     } catch (error) {
       console.error(error);
-      setResult({
+      parsedResult = {
         severity: 3,
-        category: "civil",
+        category: issueType || "civil",
         priority: "medium",
-        estimatedTime: "24 hours"
-      });
+        safetyRisk: false,
+        estimatedRepairHours: 24
+      };
     } finally {
       setIsProcessing(false);
+      
+      const reportId = `MNT-2026-${Math.floor(200 + Math.random() * 800)}`;
+      
+      setResult({
+        ...parsedResult,
+        estimatedTime: `${parsedResult.estimatedRepairHours} hours`,
+        patternDetected,
+        patternCount: sameCategoryLocationCount
+      });
+
+      addMaintenanceReport({
+        id: reportId,
+        location,
+        issueType: parsedResult.category,
+        description,
+        severity: parsedResult.severity,
+        priority: parsedResult.priority,
+        estimatedTime: `${parsedResult.estimatedRepairHours} hours`,
+        status: 'Open',
+        patternDetected,
+        patternNote: patternDetected ? `${sameCategoryLocationCount} similar complaints from ${location.split(',')[0]} recently` : '',
+        safetyRisk: parsedResult.safetyRisk,
+      });
+
+      addNotification({
+        text: `New maintenance request at ${location}`,
+        time: 'Just now',
+        type: 'maintenance'
+      });
+
+      if (patternDetected) {
+        addNotification({
+          text: `Pattern detected in ${location.split(',')[0]} for ${issueType}`,
+          time: 'Just now',
+          type: 'maintenance'
+        });
+      }
     }
   };
 
@@ -180,6 +226,15 @@ export default function MaintenanceReport() {
                     <p className="font-semibold text-primary">{result.estimatedTime}</p>
                   </div>
                 </div>
+
+                {result.patternDetected && (
+                  <div className="bg-orange-500/10 border border-orange-500/30 p-4 rounded-lg">
+                    <p className="text-xs text-orange-500 font-bold uppercase tracking-wider mb-1">⚠ Pattern Detected</p>
+                    <p className="text-sm text-foreground">
+                      {result.patternCount} similar {result.category} complaints have been reported from this location recently.
+                    </p>
+                  </div>
+                )}
 
                 <div className="pt-4">
                   <Button onClick={() => { setResult(null); setLocation(''); setDescription(''); }} className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground font-satoshi uppercase tracking-wider">

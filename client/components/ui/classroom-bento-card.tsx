@@ -1,10 +1,24 @@
 import * as React from "react";
-import { motion } from "framer-motion";
-import { GraduationCap, Users, Calendar, Copy, Check, Star, BookOpen } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import { GraduationCap, Users, Calendar, Copy, Check, Star, BookOpen, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Classroom, ClassroomStats } from "../../types/classroom";
+
+export interface Classroom {
+  id: string;
+  name: string;
+  teacherName: string;
+  classCode: string;
+  description?: string;
+  createdAt: any;
+}
+
+export interface ClassroomStats {
+  totalStudents: number;
+  totalAssignments: number;
+  pendingSubmissions: number;
+}
 
 /**
  * Props for the ClassroomBentoCard component.
@@ -23,7 +37,7 @@ interface ClassroomBentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 // Animation variants for Framer Motion
-const cardVariants = {
+const cardVariants: Variants = {
   initial: { opacity: 0, y: 20 },
   animate: {
     opacity: 1,
@@ -37,7 +51,7 @@ const cardVariants = {
   },
 };
 
-const contentVariants = {
+const contentVariants: Variants = {
   initial: {},
   animate: {
     transition: {
@@ -47,7 +61,7 @@ const contentVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
@@ -122,7 +136,7 @@ export const ClassroomBentoCard = React.forwardRef<
         animate="animate"
         whileHover="hover"
         onClick={onClick}
-        {...props}
+        {...props as any}
       >
         {/* Header with gradient accent */}
         <div className="h-24 w-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
@@ -178,7 +192,7 @@ export const ClassroomBentoCard = React.forwardRef<
               {classroom.name}
             </h2>
             <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6 border-2 border-gray-200">
+               <Avatar className="h-6 w-6 border-2 border-gray-200">
                 <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${classroom.teacherName}`} />
                 <AvatarFallback className="text-xs">{teacherInitials}</AvatarFallback>
               </Avatar>
@@ -206,13 +220,13 @@ export const ClassroomBentoCard = React.forwardRef<
             variants={itemVariants}
           >
             <StatCard
-              icon={Users}
+              icon={Users as React.ElementType}
               value={stats?.totalStudents || 0}
               label="Students"
               color="blue"
             />
             <StatCard
-              icon={Calendar}
+              icon={Calendar as React.ElementType}
               value={stats?.totalAssignments || 0}
               label="Assignments"
               color="purple"
@@ -265,13 +279,15 @@ const StatCard = ({
     green: "bg-green-500",
   };
 
+  const Ico = Icon as any;
+
   return (
     <div className={cn(
       "flex items-center gap-2 p-2.5 rounded-lg border",
       colorClasses[color]
     )}>
       <div className={cn("p-1.5 rounded-md", iconColorClasses[color])}>
-        <Icon className="h-3.5 w-3.5 text-white" />
+        <Ico className="h-3.5 w-3.5 text-white" />
       </div>
       <div>
         <p className="text-base font-bold leading-none mb-0.5">{value}</p>

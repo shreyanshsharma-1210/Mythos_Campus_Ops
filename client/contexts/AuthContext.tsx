@@ -6,12 +6,14 @@ interface User {
   email: string;
   displayName: string;
   role: 'student' | 'teacher' | 'admin';
+  photoURL?: string;
 }
 
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
-  login: () => void;
+  login: (email?: string, password?: string) => Promise<void> | void;
+  signup: (email?: string, password?: string, name?: string, role?: "teacher" | "student" | "admin") => Promise<void> | void;
   logout: () => void;
 }
 
@@ -26,12 +28,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const [loading, setLoading] = useState(false);
 
-  const login = () => {
+  const login = async (email?: string, password?: string) => {
     setCurrentUser({
       uid: 'mock-user-123',
-      email: 'student@campus.edu',
+      email: email || 'student@campus.edu',
       displayName: 'Mock Student',
       role: 'student'
+    });
+  };
+
+  const signup = async (email?: string, password?: string, name?: string, role?: "teacher" | "student" | "admin") => {
+    setCurrentUser({
+      uid: 'mock-user-123',
+      email: email || 'student@campus.edu',
+      displayName: name || 'Mock Student',
+      role: role || 'student'
     });
   };
 
@@ -40,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, loading, login, signup, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

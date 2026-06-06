@@ -107,7 +107,7 @@ export const getAnalysisResults = async (assignmentId: string): Promise<Analysis
       if (data) {
         results.push({
           id: doc.id,
-          ...data
+          ...(data as any)
         } as AnalysisResult);
       }
     });
@@ -134,7 +134,7 @@ export const getAnalysisResults = async (assignmentId: string): Promise<Analysis
       querySnapshot.forEach((doc) => {
         results.push({
           id: doc.id,
-          ...doc.data()
+          ...(doc.data() as any)
         } as AnalysisResult);
       });
       

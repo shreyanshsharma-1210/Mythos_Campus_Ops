@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { mockMaintenanceIssues } from '../lib/mockData';
+import { useCampusOS } from '../contexts/CampusOSContext';
 
 const trendData = [
   { name: 'Mon', BlockA: 4, BlockB: 2, BlockC: 1 },
@@ -14,15 +14,15 @@ const trendData = [
 ];
 
 export default function MaintenanceDashboard() {
-  const [issues, setIssues] = useState([...mockMaintenanceIssues].sort((a, b) => b.severity - a.severity));
+  const { maintenanceReports, updateMaintenanceReport } = useCampusOS();
 
-  const toggleStatus = (id: string) => {
-    setIssues(issues.map(issue => {
-      if (issue.id === id) {
-        return { ...issue, status: issue.status === 'Open' ? 'Assigned' : 'Resolved' };
-      }
-      return issue;
-    }));
+  // Create a sorted copy of the issues for display
+  const issues = [...maintenanceReports].sort((a, b) => b.severity - a.severity);
+
+  const toggleStatus = (id: string, currentStatus: string) => {
+    updateMaintenanceReport(id, {
+      status: currentStatus === 'Open' ? 'Assigned' : 'Resolved'
+    });
   };
 
   return (
@@ -93,7 +93,7 @@ export default function MaintenanceDashboard() {
                     {issue.status}
                   </span>
                   <button 
-                    onClick={() => toggleStatus(issue.id)}
+                    onClick={() => toggleStatus(issue.id, issue.status)}
                     className="text-xs text-muted-foreground hover:text-foreground underline"
                   >
                     {issue.status === 'Open' ? 'Assign Staff' : issue.status === 'Assigned' ? 'Mark Resolved' : 'Reopen'}
