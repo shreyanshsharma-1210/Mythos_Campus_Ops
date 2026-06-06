@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import { CampusOSProvider } from "./contexts/CampusOSContext";
+import { CampusOpsProvider } from "./contexts/CampusOpsContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicRoute } from "./components/PublicRoute";
 import Index from "./pages/Index";
@@ -12,7 +12,7 @@ import Signup from "./pages/Signup";
 import Dashboard2 from "./pages/Dashboard2";
 import NotFound from "./pages/NotFound";
 
-// CampusOS Modules
+// Campus Ops Modules
 import GrievanceSubmit from "./pages/GrievanceSubmit";
 import GrievanceDashboard from "./pages/GrievanceDashboard";
 import MaintenanceReport from "./pages/MaintenanceReport";
@@ -45,7 +45,7 @@ const ADMIN_ROLE = "admin" as const;
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
-      <CampusOSProvider>
+      <CampusOpsProvider>
         <SidebarProvider>
           <Toaster />
           <Sonner />
@@ -54,7 +54,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
 
             {/* Auth pages — redirect if already logged in */}
-            <Route path="/login"  element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
 
             {/* ── Student / Teacher routes ── */}
@@ -169,7 +169,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SidebarProvider>
-      </CampusOSProvider>
+      </CampusOpsProvider>
     </AuthProvider>
   </BrowserRouter>
 );

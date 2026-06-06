@@ -9,17 +9,17 @@ export interface WhatsAppAlert {
 export async function sendWhatsAppAlert(alert: WhatsAppAlert): Promise<boolean> {
   const emoji =
     alert.type === "grievance" ? "🚨" :
-    alert.type === "maintenance" ? "🔧" :
-    alert.type === "lost_found" ? "🔍" :
-    alert.type === "anti_ragging" ? "⚠️" : "📢";
+      alert.type === "maintenance" ? "🔧" :
+        alert.type === "lost_found" ? "🔍" :
+          alert.type === "anti_ragging" ? "⚠️" : "📢";
 
   const message = [
-    `${emoji} *CampusOS Alert*`,
+    `${emoji} *Campus Ops Alert*`,
     `*${alert.title}*`,
     "",
     alert.body,
     alert.ticketId ? `\nTicket ID: \`${alert.ticketId}\`` : "",
-    `\n_Sent via CampusOS · ${new Date().toLocaleTimeString("en-IN")}_`,
+    `\n_Sent via Campus Ops · ${new Date().toLocaleTimeString("en-IN")}_`,
   ]
     .filter(Boolean)
     .join("\n");

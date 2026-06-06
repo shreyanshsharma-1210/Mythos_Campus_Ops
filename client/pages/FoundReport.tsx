@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PageLayout } from "@/components/PageLayout";
 import { PackageSearch, MapPin, Calendar, CheckCircle2, Info, Shield, Clock } from "lucide-react";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 
 const ITEM_CATEGORIES = [
   { icon: "💳", label: "ID Card" },
@@ -23,7 +23,7 @@ const ITEM_CATEGORIES = [
 ];
 
 export default function FoundReport() {
-  const { addFoundItem, addNotification } = useCampusOS();
+  const { addFoundItem, addNotification } = useCampusOps();
   const [category, setCategory] = useState("");
   const [itemName, setItemName] = useState("");
   const [description, setDescription] = useState("");
@@ -73,9 +73,9 @@ export default function FoundReport() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left mb-8">
                   {[
-                    { icon: Shield,      title: "Item Secured",   desc: "Your report is now in our system. Matching runs every 30 minutes." },
-                    { icon: Clock,       title: "24h Response",   desc: "If we find a match, both parties are notified within 24 hours." },
-                    { icon: MapPin,      title: "Drop Off",       desc: "Please hand the item to the Security Desk or Lost & Found Box." },
+                    { icon: Shield, title: "Item Secured", desc: "Your report is now in our system. Matching runs every 30 minutes." },
+                    { icon: Clock, title: "24h Response", desc: "If we find a match, both parties are notified within 24 hours." },
+                    { icon: MapPin, title: "Drop Off", desc: "Please hand the item to the Security Desk or Lost & Found Box." },
                   ].map((s) => (
                     <div key={s.title} className="bg-secondary/40 rounded-xl p-4">
                       <s.icon className="w-4 h-4 text-primary mb-2" strokeWidth={1.75} />
@@ -128,11 +128,10 @@ export default function FoundReport() {
                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                       {ITEM_CATEGORIES.map((t) => (
                         <button key={t.label} type="button" onClick={() => setCategory(t.label)}
-                          className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs transition-all ${
-                            category === t.label
+                          className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs transition-all ${category === t.label
                               ? "border-primary bg-primary/5 text-foreground"
                               : "border-border bg-background text-muted-foreground hover:border-foreground/30"
-                          }`}>
+                            }`}>
                           <span className="text-lg">{t.icon}</span>
                           <span className="text-[9px]">{t.label}</span>
                         </button>
@@ -234,10 +233,10 @@ export default function FoundReport() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { label: "Items Reunited",  value: "28",  color: "text-emerald-600" },
-                  { label: "Avg Match Time",  value: "4.2h", color: "text-primary" },
-                  { label: "Active Cases",    value: "14",  color: "text-amber-600" },
-                  { label: "Match Rate",      value: "72%", color: "text-indigo-600" },
+                  { label: "Items Reunited", value: "28", color: "text-emerald-600" },
+                  { label: "Avg Match Time", value: "4.2h", color: "text-primary" },
+                  { label: "Active Cases", value: "14", color: "text-amber-600" },
+                  { label: "Match Rate", value: "72%", color: "text-indigo-600" },
                 ].map((m) => (
                   <div key={m.label} className="flex justify-between items-center">
                     <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">{m.label}</p>

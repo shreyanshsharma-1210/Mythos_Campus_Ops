@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
 import { mockMaintenanceIssues } from "@/lib/mockData";
 import { callGPT } from "@/lib/openai";
@@ -10,19 +10,19 @@ import { Wrench, AlertTriangle, CheckCircle2, Calendar, Users, MessageSquare, Za
 
 const PRIORITY_STYLE: Record<string, string> = {
   critical: "bg-destructive/10 text-destructive border-destructive/30",
-  high:     "bg-orange-500/10 text-orange-600 border-orange-500/30",
-  medium:   "bg-amber-500/10 text-amber-600 border-amber-500/30",
-  low:      "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+  high: "bg-orange-500/10 text-orange-600 border-orange-500/30",
+  medium: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+  low: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
 };
 
 const STAFF_MEMBERS = [
   { name: "Ramesh (Electrician)", specialty: "electrical", load: 2 },
-  { name: "Suresh (Plumber)",     specialty: "plumbing",   load: 1 },
-  { name: "Arjun (Maintenance)",  specialty: "general",    load: 3 },
+  { name: "Suresh (Plumber)", specialty: "plumbing", load: 1 },
+  { name: "Arjun (Maintenance)", specialty: "general", load: 3 },
 ];
 
 export default function AdminMaintenance() {
-  const { maintenanceReports, updateMaintenanceStatus } = useCampusOS();
+  const { maintenanceReports, updateMaintenanceStatus } = useCampusOps();
   const allIssues = [...mockMaintenanceIssues, ...maintenanceReports.filter(r => !mockMaintenanceIssues.find(m => m.id === r.id))];
   const [assignMap, setAssignMap] = useState<Record<string, string>>({});
   const [workOrder, setWorkOrder] = useState<string | null>(null);
@@ -95,10 +95,10 @@ export default function AdminMaintenance() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Open",        value: allIssues.filter(r => r.status !== "Fixed").length,    color: "text-primary" },
-            { label: "Safety Risks",      value: allIssues.filter(r => r.safetyRisk).length,            color: "text-destructive" },
-            { label: "Pattern Detected",  value: allIssues.filter(r => r.patternDetected).length,       color: "text-amber-600" },
-            { label: "Assigned",          value: Object.keys(assignMap).length,                         color: "text-emerald-600" },
+            { label: "Total Open", value: allIssues.filter(r => r.status !== "Fixed").length, color: "text-primary" },
+            { label: "Safety Risks", value: allIssues.filter(r => r.safetyRisk).length, color: "text-destructive" },
+            { label: "Pattern Detected", value: allIssues.filter(r => r.patternDetected).length, color: "text-amber-600" },
+            { label: "Assigned", value: Object.keys(assignMap).length, color: "text-emerald-600" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">
@@ -128,9 +128,8 @@ export default function AdminMaintenance() {
         <div className="flex gap-2">
           {(["all", "safety", "pattern"] as const).map((f) => (
             <button key={f} onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${
-                filter === f ? "bg-primary text-primary-foreground border-primary" : "bg-white text-muted-foreground border-border hover:border-foreground/30"
-              }`}>
+              className={`px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${filter === f ? "bg-primary text-primary-foreground border-primary" : "bg-white text-muted-foreground border-border hover:border-foreground/30"
+                }`}>
               {f === "all" ? "All Issues" : f === "safety" ? "⚠ Safety Risk" : "🔁 Pattern Detected"}
             </button>
           ))}
@@ -141,11 +140,10 @@ export default function AdminMaintenance() {
           <div className="lg:col-span-2 space-y-3">
             {filtered.sort((a, b) => (b.severity ?? 0) - (a.severity ?? 0)).map((r, idx) => (
               <motion.div key={r.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}>
-                <Card className={`bg-white shadow-sm rounded-xl overflow-hidden border-l-4 ${
-                  r.priority === "critical" ? "border-l-destructive" :
-                  r.priority === "high" ? "border-l-orange-500" :
-                  r.priority === "medium" ? "border-l-amber-500" : "border-l-emerald-500"
-                }`}>
+                <Card className={`bg-white shadow-sm rounded-xl overflow-hidden border-l-4 ${r.priority === "critical" ? "border-l-destructive" :
+                    r.priority === "high" ? "border-l-orange-500" :
+                      r.priority === "medium" ? "border-l-amber-500" : "border-l-emerald-500"
+                  }`}>
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2 flex-wrap">
                       <div>
@@ -184,11 +182,10 @@ export default function AdminMaintenance() {
                         {STAFF_MEMBERS.map((s) => <option key={s.name} value={s.name}>{s.name} ({s.load} tasks)</option>)}
                       </select>
                       <button onClick={() => handleNotify(r)}
-                        className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[9px] font-mono transition-all ${
-                          notified.has(r.id)
+                        className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[9px] font-mono transition-all ${notified.has(r.id)
                             ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
                             : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-                        }`}>
+                          }`}>
                         <MessageSquare className="w-3 h-3" />
                         {notified.has(r.id) ? "Notified" : "WhatsApp"}
                       </button>
@@ -234,7 +231,7 @@ export default function AdminMaintenance() {
               <CardContent className="space-y-2">
                 {[
                   { task: "Block C Electrical Inspection", day: "Friday", time: "9 AM" },
-                  { task: "Block A Plumbing Check",        day: "Saturday", time: "11 AM" },
+                  { task: "Block A Plumbing Check", day: "Saturday", time: "11 AM" },
                 ].map((item) => (
                   <div key={item.task} className="flex items-start gap-2 p-2 rounded-lg bg-secondary/30">
                     <Calendar className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" strokeWidth={1.75} />

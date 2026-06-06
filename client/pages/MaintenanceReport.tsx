@@ -9,29 +9,28 @@ import { analyzeImageWithCV, cvResultToContext } from "@/lib/azureCV";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
 import { PageLayout } from "@/components/PageLayout";
 import { Wrench, AlertTriangle, CheckCircle2, RotateCcw, MapPin, Info, Camera } from "lucide-react";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 
 const ISSUE_TYPES = [
   { value: "electrical", icon: "💡", label: "Electrical" },
-  { value: "plumbing",   icon: "🚿", label: "Plumbing" },
-  { value: "furniture",  icon: "🪑", label: "Furniture" },
-  { value: "civil",      icon: "🏗",  label: "Civil / Structural" },
-  { value: "hvac",       icon: "❄️", label: "AC / Fan" },
-  { value: "door",       icon: "🚪", label: "Door / Lock" },
-  { value: "wifi",       icon: "📶", label: "WiFi" },
-  { value: "other",      icon: "🔧", label: "Other" },
+  { value: "plumbing", icon: "🚿", label: "Plumbing" },
+  { value: "furniture", icon: "🪑", label: "Furniture" },
+  { value: "civil", icon: "🏗", label: "Civil / Structural" },
+  { value: "hvac", icon: "❄️", label: "AC / Fan" },
+  { value: "door", icon: "🚪", label: "Door / Lock" },
+  { value: "wifi", icon: "📶", label: "WiFi" },
+  { value: "other", icon: "🔧", label: "Other" },
 ];
 
 const PRIORITY_STYLE: Record<string, string> = {
   critical: "bg-destructive/10 text-destructive border-destructive/30",
-  high:     "bg-orange-500/10 text-orange-600 border-orange-500/30",
-  medium:   "bg-amber-500/10 text-amber-600 border-amber-500/30",
-  low:      "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+  high: "bg-orange-500/10 text-orange-600 border-orange-500/30",
+  medium: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+  low: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
 };
 
 const VISION_SYSTEM_PROMPT = (cvCtx: string | null) =>
-  `You are a campus maintenance severity AI analyzing a reported issue.${
-    cvCtx ? `\n\nAzure Computer Vision pre-analysis:\n${cvCtx}\n\nNow examine the image yourself for additional detail.` : "\nCarefully examine the image."
+  `You are a campus maintenance severity AI analyzing a reported issue.${cvCtx ? `\n\nAzure Computer Vision pre-analysis:\n${cvCtx}\n\nNow examine the image yourself for additional detail.` : "\nCarefully examine the image."
   } Return ONLY this JSON:
 {"severity":3,"category":"electrical|plumbing|furniture|civil|hvac|door|wifi|cleanliness","priority":"critical|high|medium|low","estimatedTime":"string","vision_notes":"one sentence describing what you see","safety_hazard":false}
 Replace all defaults with real assessed values.`;
@@ -41,7 +40,7 @@ const TEXT_SYSTEM_PROMPT = `You are a campus maintenance severity AI. Given an i
 Replace all defaults with real assessed values.`;
 
 export default function MaintenanceReport() {
-  const { addMaintenanceReport, addNotification, maintenanceReports } = useCampusOS();
+  const { addMaintenanceReport, addNotification, maintenanceReports } = useCampusOps();
   const [location, setLocation] = useState("");
   const [issueType, setIssueType] = useState("");
   const [description, setDescription] = useState("");
@@ -157,8 +156,8 @@ export default function MaintenanceReport() {
   const sevPct = result ? (result.severity / 5) * 100 : 0;
   const sevColor =
     result?.severity >= 5 ? "bg-destructive" :
-    result?.severity >= 4 ? "bg-orange-500" :
-    result?.severity >= 3 ? "bg-amber-500" : "bg-emerald-500";
+      result?.severity >= 4 ? "bg-orange-500" :
+        result?.severity >= 3 ? "bg-amber-500" : "bg-emerald-500";
 
   return (
     <PageLayout>
@@ -204,11 +203,10 @@ export default function MaintenanceReport() {
                       <div className="grid grid-cols-4 gap-2">
                         {ISSUE_TYPES.map((t) => (
                           <button key={t.value} type="button" onClick={() => setIssueType(t.value)}
-                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs transition-all ${
-                              issueType === t.value
+                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs transition-all ${issueType === t.value
                                 ? "border-primary bg-primary/5 text-foreground"
                                 : "border-border bg-background text-muted-foreground hover:border-foreground/30"
-                            }`}>
+                              }`}>
                             <span className="text-xl">{t.icon}</span>
                             <span className="text-[9px] leading-tight text-center">{t.label}</span>
                           </button>
@@ -249,9 +247,8 @@ export default function MaintenanceReport() {
                               transition={{ duration: 2, ease: "linear" }}
                             />
                           )}
-                          <div className={`absolute top-2 right-2 px-2 py-1 rounded text-[9px] font-mono font-bold transition-all ${
-                            photoScanning ? "bg-amber-500/90 text-white" : "bg-primary/90 text-primary-foreground"
-                          }`}>
+                          <div className={`absolute top-2 right-2 px-2 py-1 rounded text-[9px] font-mono font-bold transition-all ${photoScanning ? "bg-amber-500/90 text-white" : "bg-primary/90 text-primary-foreground"
+                            }`}>
                             {photoScanning ? "⚡ ANALYZING..." : "✦ AI INDEXED"}
                           </div>
                           {!photoScanning && (
@@ -358,8 +355,8 @@ export default function MaintenanceReport() {
 
                     <div className="grid grid-cols-2 gap-3">
                       {[
-                        { label: "Category",        value: result.category,       color: "text-primary" },
-                        { label: "Est. Resolution", value: result.estimatedTime,  color: "text-indigo-600" },
+                        { label: "Category", value: result.category, color: "text-primary" },
+                        { label: "Est. Resolution", value: result.estimatedTime, color: "text-indigo-600" },
                       ].map((item) => (
                         <div key={item.label} className="bg-secondary/40 p-4 rounded-xl">
                           <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-1">{item.label}</p>
@@ -387,10 +384,10 @@ export default function MaintenanceReport() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { level: "Critical", time: "2 hours",  color: "text-destructive",  dot: "bg-destructive" },
-                  { level: "High",     time: "6 hours",  color: "text-orange-600",   dot: "bg-orange-500" },
-                  { level: "Medium",   time: "24 hours", color: "text-amber-600",    dot: "bg-amber-500" },
-                  { level: "Low",      time: "3 days",   color: "text-emerald-600",  dot: "bg-emerald-500" },
+                  { level: "Critical", time: "2 hours", color: "text-destructive", dot: "bg-destructive" },
+                  { level: "High", time: "6 hours", color: "text-orange-600", dot: "bg-orange-500" },
+                  { level: "Medium", time: "24 hours", color: "text-amber-600", dot: "bg-amber-500" },
+                  { level: "Low", time: "3 days", color: "text-emerald-600", dot: "bg-emerald-500" },
                 ].map((s) => (
                   <div key={s.level} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

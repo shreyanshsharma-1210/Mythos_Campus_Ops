@@ -50,9 +50,9 @@ async function sendViaResend(message: string): Promise<boolean> {
     method: "POST",
     headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "campusos@yourapp.com",
+      from: "Campus Ops@yourapp.com",
       to: RESEND_TO,
-      subject: "CampusOS Admin Alert",
+      subject: "Campus Ops Admin Alert",
       text: message,
     }),
   });

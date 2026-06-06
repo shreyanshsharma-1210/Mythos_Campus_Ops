@@ -6,7 +6,7 @@ import {
   ResponsiveContainer, Cell, Legend,
 } from "recharts";
 import { PageLayout } from "@/components/PageLayout";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { Wrench, AlertTriangle, CheckCircle2, Clock, TrendingUp, ChevronRight } from "lucide-react";
 
 const TREND_DATA = [
@@ -22,15 +22,15 @@ const TREND_DATA = [
 const SEVERITY_COLORS = ["#10b981", "#10b981", "#f59e0b", "#ef4444", "#dc2626", "#7c3aed"];
 
 const SEV_LABEL: Record<number, { label: string; color: string; bg: string }> = {
-  5: { label: "Critical",  color: "text-destructive",    bg: "bg-destructive/10" },
-  4: { label: "High",      color: "text-orange-600",     bg: "bg-orange-500/10" },
-  3: { label: "Medium",    color: "text-amber-600",      bg: "bg-amber-500/10" },
-  2: { label: "Low",       color: "text-emerald-600",    bg: "bg-emerald-500/10" },
-  1: { label: "Minimal",   color: "text-emerald-600",    bg: "bg-emerald-500/10" },
+  5: { label: "Critical", color: "text-destructive", bg: "bg-destructive/10" },
+  4: { label: "High", color: "text-orange-600", bg: "bg-orange-500/10" },
+  3: { label: "Medium", color: "text-amber-600", bg: "bg-amber-500/10" },
+  2: { label: "Low", color: "text-emerald-600", bg: "bg-emerald-500/10" },
+  1: { label: "Minimal", color: "text-emerald-600", bg: "bg-emerald-500/10" },
 };
 
 const STATUS_COLOR: Record<string, string> = {
-  Open:     "bg-destructive/10 text-destructive border-destructive/30",
+  Open: "bg-destructive/10 text-destructive border-destructive/30",
   Assigned: "bg-amber-500/10 text-amber-600 border-amber-500/30",
   Resolved: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
 };
@@ -46,7 +46,7 @@ const tooltipStyle = {
 };
 
 export default function MaintenanceDashboard() {
-  const { maintenanceReports, updateMaintenanceReport } = useCampusOS();
+  const { maintenanceReports, updateMaintenanceReport } = useCampusOps();
   const issues = [...maintenanceReports].sort((a, b) => b.severity - a.severity);
 
   const toggleStatus = (id: string) => {
@@ -68,7 +68,7 @@ export default function MaintenanceDashboard() {
     .filter(([, count]) => count >= 3)
     .map(([type, count]) => `${count} open ${type} issues — possible systemic fault`);
 
-  const openCount     = issues.filter((i) => i.status === "Open").length;
+  const openCount = issues.filter((i) => i.status === "Open").length;
   const assignedCount = issues.filter((i) => i.status === "Assigned").length;
   const resolvedCount = issues.filter((i) => i.status === "Resolved").length;
   const criticalCount = issues.filter((i) => i.severity >= 4).length;
@@ -117,10 +117,10 @@ export default function MaintenanceDashboard() {
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Open Issues",   value: openCount,     icon: Wrench,       color: "text-destructive",  bg: "bg-destructive/5" },
-            { label: "In Progress",   value: assignedCount, icon: Clock,        color: "text-amber-600",    bg: "bg-amber-500/5" },
-            { label: "Resolved",      value: resolvedCount, icon: CheckCircle2, color: "text-emerald-600",  bg: "bg-emerald-500/5" },
-            { label: "Critical",      value: criticalCount, icon: AlertTriangle,color: "text-orange-600",   bg: "bg-orange-500/5" },
+            { label: "Open Issues", value: openCount, icon: Wrench, color: "text-destructive", bg: "bg-destructive/5" },
+            { label: "In Progress", value: assignedCount, icon: Clock, color: "text-amber-600", bg: "bg-amber-500/5" },
+            { label: "Resolved", value: resolvedCount, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-500/5" },
+            { label: "Critical", value: criticalCount, icon: AlertTriangle, color: "text-orange-600", bg: "bg-orange-500/5" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">
@@ -217,9 +217,9 @@ export default function MaintenanceDashboard() {
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { block: "Block A", density: "High",   issues: 11, color: "border-destructive bg-destructive/5",  bar: "bg-destructive", pct: 85 },
-                  { block: "Block B", density: "Medium", issues: 7,  color: "border-amber-500 bg-amber-500/5",      bar: "bg-amber-500",   pct: 54 },
-                  { block: "Block C", density: "Low",    issues: 4,  color: "border-emerald-500 bg-emerald-500/5",  bar: "bg-emerald-500", pct: 31 },
+                  { block: "Block A", density: "High", issues: 11, color: "border-destructive bg-destructive/5", bar: "bg-destructive", pct: 85 },
+                  { block: "Block B", density: "Medium", issues: 7, color: "border-amber-500 bg-amber-500/5", bar: "bg-amber-500", pct: 54 },
+                  { block: "Block C", density: "Low", issues: 4, color: "border-emerald-500 bg-emerald-500/5", bar: "bg-emerald-500", pct: 31 },
                 ].map((b) => (
                   <div key={b.block} className={`rounded-xl border p-4 ${b.color}`}>
                     <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-1">{b.density} Density</p>

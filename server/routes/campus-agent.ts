@@ -245,7 +245,7 @@ export async function handleCampusAgent(req: any, res: any) {
     return;
   }
 
-  const systemContext = `You are the CampusOS AI Agent — an autonomous campus management AI.
+  const systemContext = `You are the Campus Ops AI Agent — an autonomous campus management AI.
 
 Current campus state:
 - Grievances: ${grievances.length} total (${grievances.filter((g: any) => g.status === "Pending").length} pending)

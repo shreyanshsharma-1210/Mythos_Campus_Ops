@@ -9,9 +9,9 @@ import { useAuth } from "../contexts/AuthContext";
 
 // Demo credential hints shown on the page
 const DEMO_ACCOUNTS = [
-  { role: "Student",  email: "student@campus.edu",  password: "password123", emoji: "👨‍🎓" },
-  { role: "Admin",    email: "admin@campus.edu",    password: "admin123",    emoji: "🛡️" },
-  { role: "Teacher",  email: "teacher@campus.edu",  password: "teacher123",  emoji: "👨‍🏫" },
+  { role: "Student", email: "student@campus.edu", password: "password123", emoji: "👨‍🎓" },
+  { role: "Admin", email: "admin@campus.edu", password: "admin123", emoji: "🛡️" },
+  { role: "Teacher", email: "teacher@campus.edu", password: "teacher123", emoji: "👨‍🏫" },
 ];
 
 export default function Login() {
@@ -147,7 +147,7 @@ export default function Login() {
                     <span className="text-purple-700 font-bold text-xl">S</span>
                   </motion.div>
                   <span className="text-2xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors">
-                    CampusOS
+                    Campus Ops
                   </span>
                 </Link>
               </motion.div>

@@ -278,12 +278,12 @@ export default function Index() {
               >
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2Fd3aa34eda3ab4d118b0922afafd0e959%2Fae9bf1686f164b9699f250a6d648239a?format=webp&width=800"
-                  alt="CampusOS Logo"
+                  alt="Campus Ops Logo"
                   className="w-full h-full object-contain"
                 />
               </motion.div>
               <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                CampusOS
+                Campus Ops
               </span>
             </motion.div>
 
@@ -593,7 +593,7 @@ export default function Index() {
         <div className="container mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">System Core Attributes</h2>
-            <p className="text-gray-500">The 10 pillars powering the CampusOS infrastructure.</p>
+            <p className="text-gray-500">The 10 pillars powering the Campus Ops infrastructure.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -713,7 +713,7 @@ export default function Index() {
                 </span>
                 <br />
                 <span className="inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent font-black">
-                  CampusOS
+                  Campus Ops
                 </span>
                 <span className="inline-block ml-4 text-gray-800">
                   Ignites Your Future
@@ -1190,7 +1190,7 @@ export default function Index() {
               Our AI-powered platform uses advanced technology to make quality education
               accessible to every student, regardless of location or background. Whether you're
               a teacher creating engaging content or a student seeking personalized learning,
-              CampusOS is here to bridge the digital divide and empower seamless education.
+              Campus Ops is here to bridge the digital divide and empower seamless education.
             </p>
 
             {/* Modern 3D Feature Cards */}
@@ -2564,7 +2564,7 @@ export default function Index() {
               {
                 icon: "ðŸ“§",
                 title: "Email Us",
-                content: "CampusOS@gmail.com",
+                content: "Campus Ops@gmail.com",
                 description: "Send us an email anytime",
               },
               {

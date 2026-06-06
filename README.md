@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Animated Header -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=CampusOS&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=fff" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=Campus Ops&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=fff" />
 
 <h3>🎓 Level Up Your Learning: The AI-Powered RPG for Education ⚔️</h3>
 
@@ -17,7 +17,7 @@
 <br/>
 
 <!-- Hero Image Section -->
-<img src="public/images/image.png" alt="CampusOS Hero" width="100%" style="border-radius: 15px; border: 4px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"/>
+<img src="public/images/image.png" alt="Campus Ops Hero" width="100%" style="border-radius: 15px; border: 4px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"/>
 
 <p align="center">
   <strong>📺 Watch the full trailer on YouTube:</strong> <a href="https://youtu.be/pg0Wfs1MAkE?si=2LFa5vtFmXVwYYRT" target="_blank">https://youtu.be/pg0Wfs1MAkE</a>
@@ -41,7 +41,7 @@
 
 ---
 
-## 🎯 The Sovereign System: Why CampusOS?
+## 🎯 The Sovereign System: Why Campus Ops?
 
 In the context of a student’s life at a competitive university, the "problem" isn't just a lack of productivity—it's a lack of **engagement and psychological reward.**
 
@@ -98,7 +98,7 @@ The high-pressure environment leads to mental exhaustion, but students often ign
 
 ### ⚔️ The Hunter's System (Gamified Interaction)
 
-CampusOS transforms the educational experience into an RPG world where learning powers up your character.
+Campus Ops transforms the educational experience into an RPG world where learning powers up your character.
 
 <div align="center">
 
@@ -318,7 +318,7 @@ CampusOS transforms the educational experience into an RPG world where learning 
 
 <div align="center">
 
-### **See CampusOS in Action**
+### **See Campus Ops in Action**
 
 *Experience the power of our comprehensive educational platform through these interface previews*
 
@@ -603,7 +603,7 @@ graph TB
 ## 📂 Project Structure
 
 ```
-CampusOS/
+Campus Ops/
 ├── 📁 client/                    # React frontend application
 │   ├── 📁 components/            # Reusable UI components
 │   │   ├── ui/                   # Radix UI primitives
@@ -689,8 +689,8 @@ CampusOS/
 
 ```bash
 # 1️⃣ Clone the repository
-git clone https://github.com/Aditya-Kumrawat/CampusOS.git
-cd campusos
+git clone https://github.com/Aditya-Kumrawat/Campus Ops.git
+cd Campus Ops
 
 # 2️⃣ Install dependencies
 npm install
@@ -802,7 +802,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📚 API Documentation
 
-CampusOS provides a comprehensive RESTful API for developers to integrate with the platform. Below are some key endpoints:
+Campus Ops provides a comprehensive RESTful API for developers to integrate with the platform. Below are some key endpoints:
 
 ### Authentication
 
@@ -830,7 +830,7 @@ Content-Type: application/json
 ### WebSocket Connections
 
 ```javascript
-const socket = new WebSocket('wss://api.campusos.com/ws/proctoring');
+const socket = new WebSocket('wss://api.Campus Ops.com/ws/proctoring');
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
@@ -839,7 +839,7 @@ socket.onmessage = (event) => {
 };
 ```
 
-For complete API documentation, visit our [API Reference](https://docs.campusos.com/api).
+For complete API documentation, visit our [API Reference](https://docs.Campus Ops.com/api).
 
 ---
 
@@ -847,8 +847,8 @@ For complete API documentation, visit our [API Reference](https://docs.campusos.
 
 ### 🤔 General Questions
 
-#### Q: Is CampusOS suitable for all education levels?
-A: Absolutely! CampusOS is designed to be flexible for K-12, higher education, and professional certification programs.
+#### Q: Is Campus Ops suitable for all education levels?
+A: Absolutely! Campus Ops is designed to be flexible for K-12, higher education, and professional certification programs.
 
 #### Q: How does the AI proctoring work?
 A: Our AI proctoring uses computer vision and machine learning to monitor test-takers through their webcam, detecting potential academic dishonesty while respecting privacy.
@@ -856,9 +856,9 @@ A: Our AI proctoring uses computer vision and machine learning to monitor test-t
 ### 🛠️ Technical Questions
 
 #### Q: What are the system requirements?
-A: CampusOS works on modern browsers (Chrome, Firefox, Edge, Safari) with a minimum of 4GB RAM and a stable internet connection.
+A: Campus Ops works on modern browsers (Chrome, Firefox, Edge, Safari) with a minimum of 4GB RAM and a stable internet connection.
 
-#### Q: Can I integrate CampusOS with my existing LMS?
+#### Q: Can I integrate Campus Ops with my existing LMS?
 A: Yes! We support LTI (Learning Tools Interoperability) and custom API integrations with popular LMS platforms like Moodle, Canvas, and Blackboard.
 
 ### 🔒 Security & Privacy
@@ -976,7 +976,7 @@ A: Yes! We support LTI (Learning Tools Interoperability) and custom API integrat
 
 ### 📊 Market Gap Analysis
 
-| Feature | Competitor A | Competitor B | CampusOS |
+| Feature | Competitor A | Competitor B | Campus Ops |
 |---------|--------------|--------------|------------|
 | AI Proctoring | ❌ Limited | ✅ Basic | ✅ Advanced |
 | Offline Support | ❌ No | ❌ No | ✅ Yes |
@@ -1050,7 +1050,7 @@ graph TD
 
 ---
 
-## 🏆 Why Choose CampusOS?
+## 🏆 Why Choose Campus Ops?
 
 ### 🎯 Unique Value Propositions
 
@@ -1105,14 +1105,14 @@ graph TD
 ### Getting Help
 
 1. **Documentation**
-   - [User Guide](https://docs.campusos.com/guide)
-   - [API Reference](https://docs.campusos.com/api)
-   - [FAQ](https://docs.campusos.com/faq)
+   - [User Guide](https://docs.Campus Ops.com/guide)
+   - [API Reference](https://docs.Campus Ops.com/api)
+   - [FAQ](https://docs.Campus Ops.com/faq)
 
 2. **Community Support**
-   - [Community Forum](https://community.campusos.com)
-   - [GitHub Discussions](https://github.com/Aditya-Kumrawat/CampusOS/discussions)
-   - [Discord Server](https://discord.gg/campusos)
+   - [Community Forum](https://community.Campus Ops.com)
+   - [GitHub Discussions](https://github.com/Aditya-Kumrawat/Campus Ops/discussions)
+   - [Discord Server](https://discord.gg/Campus Ops)
 
 3. **Enterprise Support**
    - Priority email support
@@ -1126,17 +1126,17 @@ graph TD
 ### Got Questions? We're Here to Help!
 
 <p>
-<a href="mailto:support@campusos.com">
-  <img src="https://img.shields.io/badge/Email-support@campusos.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
+<a href="mailto:support@Campus Ops.com">
+  <img src="https://img.shields.io/badge/Email-support@Campus Ops.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
 </a>
 </p>
 
 ### 🌟 Star Us on GitHub!
 
-If you find CampusOS helpful, please consider giving us a star ⭐
+If you find Campus Ops helpful, please consider giving us a star ⭐
 
-<a href="https://github.com/Aditya-Kumrawat/CampusOS">
-  <img src="https://img.shields.io/github/stars/Aditya-Kumrawat/CampusOS?style=social" alt="GitHub stars" />
+<a href="https://github.com/Aditya-Kumrawat/Campus Ops">
+  <img src="https://img.shields.io/github/stars/Aditya-Kumrawat/Campus Ops?style=social" alt="GitHub stars" />
 </a>
 
 </div>
@@ -1149,13 +1149,13 @@ If you find CampusOS helpful, please consider giving us a star ⭐
 
 ### 🌟 Don't forget to star this repo if you found it helpful!
 
-[![Star on GitHub](https://img.shields.io/github/stars/Aditya-Kumrawat/CampusOS?style=social)](https://github.com/Aditya-Kumrawat/CampusOS/stargazers)
-[![Watch on GitHub](https://img.shields.io/github/watchers/Aditya-Kumrawat/CampusOS?style=social)](https://github.com/Aditya-Kumrawat/CampusOS/watchers)
-[![Fork on GitHub](https://img.shields.io/github/forks/Aditya-Kumrawat/CampusOS?style=social)](https://github.com/Aditya-Kumrawat/CampusOS/forks)
+[![Star on GitHub](https://img.shields.io/github/stars/Aditya-Kumrawat/Campus Ops?style=social)](https://github.com/Aditya-Kumrawat/Campus Ops/stargazers)
+[![Watch on GitHub](https://img.shields.io/github/watchers/Aditya-Kumrawat/Campus Ops?style=social)](https://github.com/Aditya-Kumrawat/Campus Ops/watchers)
+[![Fork on GitHub](https://img.shields.io/github/forks/Aditya-Kumrawat/Campus Ops?style=social)](https://github.com/Aditya-Kumrawat/Campus Ops/forks)
 
 ---
 
-**CampusOS** - *Empowering the Future of Education* 🎓
+**Campus Ops** - *Empowering the Future of Education* 🎓
 
 ---
 

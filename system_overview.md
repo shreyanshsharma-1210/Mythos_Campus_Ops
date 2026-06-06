@@ -1,10 +1,10 @@
-# CampusOS (EduSaarthi) System Overview
+# Campus Ops (EduSaarthi) System Overview
 
 ## What is the Current System?
-**CampusOS** (also referred to as *EduSaarthi*) is a production-ready, AI-powered educational platform that gamifies the student experience. It blends modern learning management system (LMS) capabilities with an RPG (Role-Playing Game) mechanic, transforming academic and extracurricular tasks into "quests" that reward students with XP and attribute growth. The system incorporates an AI proctoring layer to maintain academic integrity during online assessments and provides an immersive visual environment, such as a 3D Hunter's Hub.
+**Campus Ops** (also referred to as *EduSaarthi*) is a production-ready, AI-powered educational platform that gamifies the student experience. It blends modern learning management system (LMS) capabilities with an RPG (Role-Playing Game) mechanic, transforming academic and extracurricular tasks into "quests" that reward students with XP and attribute growth. The system incorporates an AI proctoring layer to maintain academic integrity during online assessments and provides an immersive visual environment, such as a 3D Hunter's Hub.
 
 ## What Does it Do?
-CampusOS bridges the gap between traditional education and student engagement. It actively solves problems like "The Academic Void" (lack of immediate feedback) and "The Solo Grind" (isolation) by offering:
+Campus Ops bridges the gap between traditional education and student engagement. It actively solves problems like "The Academic Void" (lack of immediate feedback) and "The Solo Grind" (isolation) by offering:
 1. **Gamified Learning**: Students earn XP and rank up (E to S Rank) across different attributes ([STR], [INT], [WIL], [SOC]) by completing study sessions, networking, and taking care of their health.
 2. **AI Proctoring**: Monitors students during tests using computer vision (face detection, eye gaze tracking, object detection) to detect anomalies and flag cheating.
 3. **Immersive Dashboards for Teachers & Students**: A central hub to manage courses, track real-time analytics, review student progress, and schedule assignments.

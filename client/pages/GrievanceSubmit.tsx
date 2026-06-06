@@ -8,19 +8,19 @@ import { callGPT } from "@/lib/openai";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
 import { PageLayout } from "@/components/PageLayout";
 import { Flag, Users, Clock, Zap, RotateCcw, CheckCircle2, AlertTriangle, Mic, MicOff } from "lucide-react";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 
 const URGENCY_LABELS = ["", "Can Wait", "Annoying", "Affecting Studies", "Urgent", "Emergency"];
 const URGENCY_COLORS = ["", "text-emerald-600", "text-yellow-600", "text-amber-600", "text-orange-600", "text-destructive"];
 
 const CATEGORIES = [
-  { value: "Hostel",         icon: "🏠" },
-  { value: "Academics",      icon: "📚" },
-  { value: "Canteen",        icon: "🍽" },
-  { value: "Electrical",     icon: "💡" },
-  { value: "Plumbing",       icon: "🚿" },
-  { value: "Security",       icon: "🔒" },
-  { value: "Medical",        icon: "🏥" },
+  { value: "Hostel", icon: "🏠" },
+  { value: "Academics", icon: "📚" },
+  { value: "Canteen", icon: "🍽" },
+  { value: "Electrical", icon: "💡" },
+  { value: "Plumbing", icon: "🚿" },
+  { value: "Security", icon: "🔒" },
+  { value: "Medical", icon: "🏥" },
   { value: "Administration", icon: "⚖" },
 ];
 
@@ -34,13 +34,13 @@ const LOADING_STEPS = [
 
 const RISK_STYLE: Record<string, string> = {
   Critical: "bg-destructive/10 text-destructive border-destructive/30",
-  High:     "bg-amber-500/10 text-amber-600 border-amber-500/30",
-  Medium:   "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
-  Low:      "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+  High: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+  Medium: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
+  Low: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
 };
 
 export default function GrievanceSubmit() {
-  const { addGrievance, addNotification } = useCampusOS();
+  const { addGrievance, addNotification } = useCampusOps();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -203,11 +203,10 @@ Replace all numeric defaults with real values. Only return JSON.`;
                           <div className="grid grid-cols-4 gap-2">
                             {CATEGORIES.map((cat) => (
                               <button key={cat.value} type="button" onClick={() => setCategory(cat.value)}
-                                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all ${
-                                  category === cat.value
+                                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all ${category === cat.value
                                     ? "border-primary bg-primary/5 text-foreground"
                                     : "border-border bg-background text-muted-foreground hover:border-foreground/30"
-                                }`}>
+                                  }`}>
                                 <span className="text-xl">{cat.icon}</span>
                                 <span className="text-[10px]">{cat.value}</span>
                               </button>
@@ -219,11 +218,10 @@ Replace all numeric defaults with real values. Only return JSON.`;
                           <div className="flex items-center justify-between mb-2">
                             <label className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase">Description</label>
                             <button type="button" onClick={handleVoiceInput}
-                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-all ${
-                                isListening
+                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-all ${isListening
                                   ? "border-destructive bg-destructive/10 text-destructive animate-pulse"
                                   : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-                              }`}>
+                                }`}>
                               {isListening ? <MicOff className="w-3 h-3" /> : <Mic className="w-3 h-3" />}
                               {isListening ? "Listening…" : "Voice Input"}
                             </button>
@@ -249,7 +247,7 @@ Replace all numeric defaults with real values. Only return JSON.`;
                             <span className="text-[9px] font-mono text-muted-foreground">HIGH</span>
                           </div>
                           <div className="flex justify-between mt-1">
-                            {[1,2,3,4,5].map((n) => (
+                            {[1, 2, 3, 4, 5].map((n) => (
                               <div key={n} className={`w-2 h-2 rounded-full ${n <= urgency ? "bg-primary" : "bg-secondary"}`} />
                             ))}
                           </div>
@@ -332,9 +330,9 @@ Replace all numeric defaults with real values. Only return JSON.`;
 
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { label: "Routed To",       value: result.department?.replace(/_/g, " "), color: "text-primary" },
-                          { label: "AI Urgency",       value: `${result.urgency} / 5`,               color: "text-amber-600" },
-                          { label: "Sentiment",        value: result.sentiment,                        color: result.sentiment === "angry" || result.sentiment === "distressed" ? "text-destructive" : "text-emerald-600" },
+                          { label: "Routed To", value: result.department?.replace(/_/g, " "), color: "text-primary" },
+                          { label: "AI Urgency", value: `${result.urgency} / 5`, color: "text-amber-600" },
+                          { label: "Sentiment", value: result.sentiment, color: result.sentiment === "angry" || result.sentiment === "distressed" ? "text-destructive" : "text-emerald-600" },
                           { label: "Est. Resolution", value: `${result.estimated_resolution_days}d`, color: "text-indigo-600" },
                         ].map((item) => (
                           <div key={item.label} className="bg-secondary/40 p-3 rounded-xl">
@@ -402,10 +400,10 @@ Replace all numeric defaults with real values. Only return JSON.`;
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { label: "Tickets Today",      value: "14",  color: "text-primary" },
-                  { label: "Avg Resolution",      value: "2.4d", color: "text-indigo-600" },
-                  { label: "Critical Open",       value: "3",   color: "text-destructive" },
-                  { label: "AI Accuracy",         value: "94%", color: "text-emerald-600" },
+                  { label: "Tickets Today", value: "14", color: "text-primary" },
+                  { label: "Avg Resolution", value: "2.4d", color: "text-indigo-600" },
+                  { label: "Critical Open", value: "3", color: "text-destructive" },
+                  { label: "AI Accuracy", value: "94%", color: "text-emerald-600" },
                 ].map((m) => (
                   <div key={m.label} className="flex justify-between items-center">
                     <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">{m.label}</p>
@@ -422,9 +420,9 @@ Replace all numeric defaults with real values. Only return JSON.`;
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { icon: Zap,           text: "Be specific — mention exact location & time" },
-                  { icon: Users,         text: "Note if others are affected" },
-                  { icon: Clock,         text: "Upload a photo for faster triage" },
+                  { icon: Zap, text: "Be specific — mention exact location & time" },
+                  { icon: Users, text: "Note if others are affected" },
+                  { icon: Clock, text: "Upload a photo for faster triage" },
                   { icon: AlertTriangle, text: "Use Emergency only for safety risks" },
                 ].map((tip, i) => (
                   <div key={i} className="flex items-start gap-2">

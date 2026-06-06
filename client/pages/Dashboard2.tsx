@@ -20,7 +20,7 @@ import { DashboardTour } from "@/components/DashboardTour";
 import CampusDashboardWrapper from "@/components/campus-os/CampusDashboardWrapper";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCampusOS } from "../contexts/CampusOSContext";
+import { useCampusOps } from "../contexts/CampusOpsContext";
 import {
   Plus,
   MoreVertical,
@@ -59,7 +59,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 export default function Dashboard2() {
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const { currentUser } = useAuth();
-  const { grievances, maintenanceReports, lostItems, foundItems, notifications } = useCampusOS();
+  const { grievances, maintenanceReports, lostItems, foundItems, notifications } = useCampusOps();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -279,7 +279,7 @@ export default function Dashboard2() {
                 { title: 'POLICY QUERIES TODAY', value: '89', route: '/policy' },
                 { title: 'MATCHES FOUND', value: Math.min(lostItems.length, foundItems.length).toString(), route: '/lost-found' }
               ].map((stat, idx) => (
-                <motion.div 
+                <motion.div
                   key={stat.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -314,25 +314,25 @@ export default function Dashboard2() {
                     <h3 className="font-bold text-lg text-foreground mb-1">Report Maintenance</h3>
                     <p className="text-muted-foreground text-sm dashboard-text">AI-scored severity triage</p>
                   </Card>
-                  
+
                   <Card onClick={() => navigate('/policy')} className="bg-white hover:bg-gray-50/50 border-border p-6 rounded-xl cursor-pointer transition-colors shadow-sm group">
                     <BookOpen className="w-8 h-8 text-primary mb-4" strokeWidth={1.5} />
                     <h3 className="font-bold text-lg text-foreground mb-1">Policy Navigator</h3>
                     <p className="text-muted-foreground text-sm dashboard-text">Ask questions via GPT RAG</p>
                   </Card>
-                  
+
                   <Card onClick={() => navigate('/lost')} className="bg-white hover:bg-gray-50/50 border-border p-6 rounded-xl cursor-pointer transition-colors shadow-sm group">
                     <Search className="w-8 h-8 text-primary mb-4" strokeWidth={1.5} />
                     <h3 className="font-bold text-lg text-foreground mb-1">Lost Item</h3>
                     <p className="text-muted-foreground text-sm dashboard-text">Report something you lost</p>
                   </Card>
-                  
+
                   <Card onClick={() => navigate('/found')} className="bg-white hover:bg-gray-50/50 border-border p-6 rounded-xl cursor-pointer transition-colors shadow-sm group">
                     <CheckCircle className="w-8 h-8 text-primary mb-4" strokeWidth={1.5} />
                     <h3 className="font-bold text-lg text-foreground mb-1">Found Item</h3>
                     <p className="text-muted-foreground text-sm dashboard-text">Report something you found</p>
                   </Card>
-                  
+
                   <Card onClick={() => navigate('/grievances/submit')} className="bg-primary/5 hover:bg-primary/10 border-primary/20 p-6 rounded-xl cursor-pointer transition-colors shadow-sm group md:col-span-2">
                     <div className="flex items-center justify-between">
                       <div>
@@ -352,7 +352,7 @@ export default function Dashboard2() {
                 <Card className="bg-white border-border rounded-xl shadow-sm overflow-hidden">
                   <div className="divide-y divide-border">
                     {notifications.map((notif, idx) => (
-                      <motion.div 
+                      <motion.div
                         key={notif.id}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -360,11 +360,10 @@ export default function Dashboard2() {
                         className="p-4 hover:bg-gray-50/50 transition-colors"
                       >
                         <div className="flex items-start space-x-3">
-                          <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${
-                            notif.type === 'maintenance' ? 'bg-destructive' :
-                            notif.type === 'match' ? 'bg-green-500' :
-                            notif.type === 'grievance' ? 'bg-blue-500' : 'bg-purple-500'
-                          }`} />
+                          <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${notif.type === 'maintenance' ? 'bg-destructive' :
+                              notif.type === 'match' ? 'bg-green-500' :
+                                notif.type === 'grievance' ? 'bg-blue-500' : 'bg-purple-500'
+                            }`} />
                           <div>
                             <p className="text-sm font-medium text-foreground dashboard-text">{notif.text}</p>
                             <p className="text-xs text-muted-foreground mt-1">{notif.time}</p>

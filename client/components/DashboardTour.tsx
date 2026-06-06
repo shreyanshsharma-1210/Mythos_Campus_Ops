@@ -13,7 +13,7 @@ export const DashboardTour: React.FC<DashboardTourProps> = ({ userType = 'studen
 
   // Check if user has seen the tour before
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem(`campusos_tour_${userType}_completed`);
+    const hasSeenTour = localStorage.getItem(`Campus Ops_tour_${userType}_completed`);
     if (!hasSeenTour) {
       // Optionally auto-start tour for first-time users after a delay
       // setTimeout(() => setRunTour(true), 1000);
@@ -24,7 +24,7 @@ export const DashboardTour: React.FC<DashboardTourProps> = ({ userType = 'studen
   const studentSteps: Step[] = [
     {
       target: 'body',
-      title: '👋 Welcome to CampusOS!',
+      title: '👋 Welcome to Campus Ops!',
       content: 'Let me show you around your dashboard! This quick tour will help you discover all the amazing features available to enhance your learning journey.',
       disableBeacon: true,
       placement: 'center',
@@ -143,7 +143,7 @@ export const DashboardTour: React.FC<DashboardTourProps> = ({ userType = 'studen
       // Tour completed or skipped
       setRunTour(false);
       setStepIndex(0);
-      localStorage.setItem(`campusos_tour_${userType}_completed`, 'true');
+      localStorage.setItem(`Campus Ops_tour_${userType}_completed`, 'true');
 
       // Show completion toast (optional)
       console.log("Tour completed! 🚀");
@@ -162,7 +162,7 @@ export const DashboardTour: React.FC<DashboardTourProps> = ({ userType = 'studen
 
   // Reset tour (for testing or "show again")
   const resetTour = () => {
-    localStorage.removeItem(`campusos_tour_${userType}_completed`);
+    localStorage.removeItem(`Campus Ops_tour_${userType}_completed`);
     startTour();
   };
 

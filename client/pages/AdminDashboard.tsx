@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/PageLayout";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { callGPT } from "@/lib/openai";
 import {
   Flag, Wrench, ScanSearch, BookOpen, AlertTriangle,
@@ -20,7 +20,7 @@ const DEPT_COLORS: Record<string, string> = {
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { grievances, maintenanceReports, lostItems, notifications } = useCampusOS();
+  const { grievances, maintenanceReports, lostItems, notifications } = useCampusOps();
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [feed, setFeed] = useState<{ text: string; type: string; time: string }[]>([]);
@@ -83,7 +83,7 @@ Focus on what needs immediate attention. Be direct.`;
           <div>
             <p className="text-[9px] font-mono tracking-widest text-muted-foreground uppercase mb-1">Admin · Mission Control</p>
             <h1 className="text-3xl font-display font-black uppercase tracking-wide text-foreground leading-none">Campus Dashboard</h1>
-            <p className="text-sm text-muted-foreground mt-1">Real-time overview of all CampusOS modules.</p>
+            <p className="text-sm text-muted-foreground mt-1">Real-time overview of all Campus Ops modules.</p>
           </div>
           <Button onClick={generateAiSummary} disabled={summaryLoading}
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-display font-black uppercase tracking-wide rounded-xl text-sm">
@@ -103,11 +103,11 @@ Focus on what needs immediate attention. Be direct.`;
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
-            { label: "Open Grievances",    value: openGrievances,      icon: Flag,         color: "text-primary",      bg: "bg-primary/5",       href: "/admin/grievances" },
-            { label: "Critical Escalations",value: criticalEscalations, icon: AlertTriangle,color: "text-destructive",  bg: "bg-destructive/5",   href: "/admin/grievances" },
-            { label: "Open Maintenance",   value: openMaintenance,     icon: Wrench,       color: "text-amber-600",    bg: "bg-amber-500/5",     href: "/admin/maintenance" },
-            { label: "Safety Risks",       value: safetyRisks,         icon: Shield,       color: "text-orange-600",   bg: "bg-orange-500/5",    href: "/admin/maintenance" },
-            { label: "Unmatched Items",    value: unmatchedItems,      icon: ScanSearch,   color: "text-indigo-600",   bg: "bg-indigo-500/5",    href: "/admin/lost-found" },
+            { label: "Open Grievances", value: openGrievances, icon: Flag, color: "text-primary", bg: "bg-primary/5", href: "/admin/grievances" },
+            { label: "Critical Escalations", value: criticalEscalations, icon: AlertTriangle, color: "text-destructive", bg: "bg-destructive/5", href: "/admin/grievances" },
+            { label: "Open Maintenance", value: openMaintenance, icon: Wrench, color: "text-amber-600", bg: "bg-amber-500/5", href: "/admin/maintenance" },
+            { label: "Safety Risks", value: safetyRisks, icon: Shield, color: "text-orange-600", bg: "bg-orange-500/5", href: "/admin/maintenance" },
+            { label: "Unmatched Items", value: unmatchedItems, icon: ScanSearch, color: "text-indigo-600", bg: "bg-indigo-500/5", href: "/admin/lost-found" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
               <Card onClick={() => navigate(s.href)}
@@ -169,11 +169,11 @@ Focus on what needs immediate attention. Be direct.`;
             </CardHeader>
             <CardContent className="space-y-2">
               {[
-                { label: "Grievance Management",  icon: Flag,        href: "/admin/grievances",  color: "text-primary" },
-                { label: "Maintenance Queue",     icon: Wrench,      href: "/admin/maintenance", color: "text-amber-600" },
-                { label: "Lost & Found Moderation",icon: ScanSearch, href: "/admin/lost-found",  color: "text-indigo-600" },
-                { label: "Policy Documents",      icon: BookOpen,    href: "/admin/policy",      color: "text-emerald-600" },
-                { label: "AI Agent Console",      icon: Bot,         href: "/agent",             color: "text-purple-600" },
+                { label: "Grievance Management", icon: Flag, href: "/admin/grievances", color: "text-primary" },
+                { label: "Maintenance Queue", icon: Wrench, href: "/admin/maintenance", color: "text-amber-600" },
+                { label: "Lost & Found Moderation", icon: ScanSearch, href: "/admin/lost-found", color: "text-indigo-600" },
+                { label: "Policy Documents", icon: BookOpen, href: "/admin/policy", color: "text-emerald-600" },
+                { label: "AI Agent Console", icon: Bot, href: "/agent", color: "text-purple-600" },
               ].map((item) => (
                 <button key={item.href} onClick={() => navigate(item.href)}
                   className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-border hover:bg-secondary transition-colors group">
@@ -200,11 +200,10 @@ Focus on what needs immediate attention. Be direct.`;
             {feed.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}
                 className="flex items-start gap-3 py-2 border-b border-border last:border-0">
-                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
-                  item.type === "grievance" ? "bg-primary" :
-                  item.type === "maintenance" ? "bg-amber-500" :
-                  item.type === "lost_found" ? "bg-indigo-500" : "bg-muted-foreground"
-                }`} />
+                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${item.type === "grievance" ? "bg-primary" :
+                    item.type === "maintenance" ? "bg-amber-500" :
+                      item.type === "lost_found" ? "bg-indigo-500" : "bg-muted-foreground"
+                  }`} />
                 <p className="text-xs text-muted-foreground flex-1 leading-relaxed">{item.text}</p>
                 <span className="text-[9px] font-mono text-muted-foreground/60 shrink-0">{item.time}</span>
               </motion.div>
@@ -215,10 +214,10 @@ Focus on what needs immediate attention. Be direct.`;
         {/* Footer stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Avg Resolution",    value: "18h",  icon: Clock,         color: "text-primary" },
-            { label: "SLA Compliance",    value: "87%",  icon: TrendingUp,    color: "text-emerald-600" },
-            { label: "Staff Active",      value: "6",    icon: Users,         color: "text-amber-600" },
-            { label: "Resolved Today",    value: String(grievances.filter(g=>g.status==="Resolved").length || 3), icon: CheckCircle2, color: "text-indigo-600" },
+            { label: "Avg Resolution", value: "18h", icon: Clock, color: "text-primary" },
+            { label: "SLA Compliance", value: "87%", icon: TrendingUp, color: "text-emerald-600" },
+            { label: "Staff Active", value: "6", icon: Users, color: "text-amber-600" },
+            { label: "Resolved Today", value: String(grievances.filter(g => g.status === "Resolved").length || 3), icon: CheckCircle2, color: "text-indigo-600" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.06 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">

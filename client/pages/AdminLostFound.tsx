@@ -2,13 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { mockLostItems, mockFoundItems } from "@/lib/mockData";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
 import { ScanSearch, CheckCircle2, MapPin, Calendar, MessageSquare, Eye, QrCode, Share2 } from "lucide-react";
 
 export default function AdminLostFound() {
-  const { lostItems, foundItems } = useCampusOS();
+  const { lostItems, foundItems } = useCampusOps();
   const allLost = [...mockLostItems, ...lostItems.filter(i => !mockLostItems.find(m => m.id === i.id))];
   const allFound = [...mockFoundItems, ...foundItems.filter(i => !mockFoundItems.find(m => m.id === i.id))];
 
@@ -19,7 +19,7 @@ export default function AdminLostFound() {
   const [notified, setNotified] = useState<Set<string>>(new Set());
 
   const handleApprove = (id: string) => setApproved(p => new Set([...p, id]));
-  const handleReject  = (id: string) => { setRejected(p => new Set([...p, id])); setApproved(p => { const n = new Set(p); n.delete(id); return n; }); };
+  const handleReject = (id: string) => { setRejected(p => new Set([...p, id])); setApproved(p => { const n = new Set(p); n.delete(id); return n; }); };
   const handleReunite = (id: string) => setReunited(p => new Set([...p, id]));
 
   const handleNotify = async (item: typeof allLost[0]) => {
@@ -48,10 +48,10 @@ export default function AdminLostFound() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Active Cases",     value: allLost.filter(i => !reunited.has(i.id)).length, color: "text-primary",    icon: ScanSearch },
-            { label: "Poster Views",     value: totalViews,                                       color: "text-indigo-600", icon: Eye },
-            { label: "AI Matches",       value: totalMatches,                                     color: "text-amber-600",  icon: Share2 },
-            { label: "Reunited",         value: reunited.size,                                    color: "text-emerald-600",icon: CheckCircle2 },
+            { label: "Active Cases", value: allLost.filter(i => !reunited.has(i.id)).length, color: "text-primary", icon: ScanSearch },
+            { label: "Poster Views", value: totalViews, color: "text-indigo-600", icon: Eye },
+            { label: "AI Matches", value: totalMatches, color: "text-amber-600", icon: Share2 },
+            { label: "Reunited", value: reunited.size, color: "text-emerald-600", icon: CheckCircle2 },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">
@@ -71,9 +71,8 @@ export default function AdminLostFound() {
         <div className="flex gap-2">
           {(["lost", "found", "reunited"] as const).map((t) => (
             <button key={t} onClick={() => setTab(t)}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${
-                tab === t ? "bg-primary text-primary-foreground border-primary" : "bg-white text-muted-foreground border-border hover:border-foreground/30"
-              }`}>
+              className={`px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${tab === t ? "bg-primary text-primary-foreground border-primary" : "bg-white text-muted-foreground border-border hover:border-foreground/30"
+                }`}>
               {t === "lost" ? `Lost Items (${allLost.length})` : t === "found" ? `Found Items (${allFound.length})` : `Reunited (${reunited.size})`}
             </button>
           ))}
@@ -115,9 +114,9 @@ export default function AdminLostFound() {
                     {/* Campaign stats */}
                     <div className="grid grid-cols-4 gap-2">
                       {[
-                        { icon: Eye,        label: "Views",   value: item.posterViews ?? 0 },
-                        { icon: QrCode,     label: "Scans",   value: item.qrScans ?? 0 },
-                        { icon: Share2,     label: "Shares",  value: item.shares ?? 0 },
+                        { icon: Eye, label: "Views", value: item.posterViews ?? 0 },
+                        { icon: QrCode, label: "Scans", value: item.qrScans ?? 0 },
+                        { icon: Share2, label: "Shares", value: item.shares ?? 0 },
                         { icon: ScanSearch, label: "Matches", value: item.potentialMatches ?? 0 },
                       ].map((stat) => (
                         <div key={stat.label} className="bg-secondary/30 rounded-lg p-2 text-center">
@@ -141,11 +140,10 @@ export default function AdminLostFound() {
                         </>
                       )}
                       <button onClick={() => handleNotify(item)}
-                        className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[9px] font-mono transition-all ${
-                          notified.has(item.id)
+                        className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[9px] font-mono transition-all ${notified.has(item.id)
                             ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
                             : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-                        }`}>
+                          }`}>
                         <MessageSquare className="w-3 h-3" />
                         {notified.has(item.id) ? "Notified" : "WhatsApp Update"}
                       </button>

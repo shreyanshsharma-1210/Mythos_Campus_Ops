@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/PageLayout";
 import { callGPT } from "@/lib/openai";
 import { extractTextFromPDF } from "@/lib/pdfExtract";
-import { useCampusOS, PolicyDoc } from "@/contexts/CampusOSContext";
+import { useCampusOps, PolicyDoc } from "@/contexts/CampusOpsContext";
 import { BookOpen, Upload, Trash2, TrendingUp, MessageSquare, FileText, Lightbulb } from "lucide-react";
 
 const TOP_QUERIES = [
-  { question: "Can I install an AC in my room?",        count: 34, doc: "Hostel Rules" },
-  { question: "What is the minimum attendance?",         count: 28, doc: "Exam Policy" },
-  { question: "What are late fee charges?",              count: 22, doc: "Fee Structure" },
-  { question: "Can I bring guests overnight?",           count: 19, doc: "Hostel Rules" },
-  { question: "What happens if I fail one subject?",     count: 15, doc: "Exam Policy" },
+  { question: "Can I install an AC in my room?", count: 34, doc: "Hostel Rules" },
+  { question: "What is the minimum attendance?", count: 28, doc: "Exam Policy" },
+  { question: "What are late fee charges?", count: 22, doc: "Fee Structure" },
+  { question: "Can I bring guests overnight?", count: 19, doc: "Hostel Rules" },
+  { question: "What happens if I fail one subject?", count: 15, doc: "Exam Policy" },
 ];
 
 export default function AdminPolicy() {
@@ -22,7 +22,7 @@ export default function AdminPolicy() {
     addPolicyDocument,
     removePolicyDocument,
     togglePolicyDocumentActive,
-  } = useCampusOS();
+  } = useCampusOps();
 
   const [uploading, setUploading] = useState(false);
   const [faqLoading, setFaqLoading] = useState(false);
@@ -103,10 +103,10 @@ export default function AdminPolicy() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Documents Loaded",  value: docs.length,    color: "text-primary" },
-            { label: "Active",            value: activeDocs,     color: "text-emerald-600" },
-            { label: "Total Queries",     value: totalQueries,   color: "text-indigo-600" },
-            { label: "Top Topic",         value: "Hostel Rules", color: "text-amber-600" },
+            { label: "Documents Loaded", value: docs.length, color: "text-primary" },
+            { label: "Active", value: activeDocs, color: "text-emerald-600" },
+            { label: "Total Queries", value: totalQueries, color: "text-indigo-600" },
+            { label: "Top Topic", value: "Hostel Rules", color: "text-amber-600" },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">

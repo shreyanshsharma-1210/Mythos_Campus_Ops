@@ -1,8 +1,8 @@
-CampusOS
+Campus Ops
 Frontend-Only Master Plan & Master Prompt
 AI for Campus Operations — Hackathon Submission
 1. Project Overview & Constraints
-This document defines exactly what to build, what to remove, what to keep, and the master prompt to feed into any AI code generator (Cursor, Copilot, ChatGPT, etc.) to execute the frontend refactor of CampusOS for the hackathon.
+This document defines exactly what to build, what to remove, what to keep, and the master prompt to feed into any AI code generator (Cursor, Copilot, ChatGPT, etc.) to execute the frontend refactor of Campus Ops for the hackathon.
 Hard Constraints:
 Frontend only — no backend code to be written
 No Firebase — all data is mock/static JSON or localStorage
@@ -11,7 +11,7 @@ LLM: OpenAI GPT-4.1-mini via API calls from frontend
 Stack stays: React + Vite + TypeScript + TailwindCSS + Radix UI
 Submission is a VIDEO — build for demo impressiveness first
 2. Modules to REMOVE Completely
-Delete or comment out the following files/routes from the CampusOS codebase. Do not spend any time on these.
+Delete or comment out the following files/routes from the Campus Ops codebase. Do not spend any time on these.
 File / Module
 Reason to Remove
 ComputerVision.tsx
@@ -52,7 +52,7 @@ Calendar.tsx
 Grievance deadline tracker
 PS1
 Dashboard.tsx
-Unified CampusOS home hub
+Unified Campus Ops home hub
 All PS
 ClassroomsPage.tsx
 Department/category view
@@ -102,13 +102,13 @@ Filter by: category, location, date, confidence threshold
 HeatmapView.tsx — Campus lost item hotspots
 D3.js rendered SVG campus map with hotspot circles
 Size of circle = number of lost items in that zone
-5. Unified CampusOS Home Dashboard
+5. Unified Campus Ops Home Dashboard
 This is the WOW screen — shown first in the video. Shows all 4 PS modules as live widgets.
 Top stats bar: Total Grievances | Open Maintenance | Policy Queries Today | Matches Found
 4 module cards with live mock counters and sparklines
 Notification feed on right: recent AI actions across all modules
 Quick-action FAB (floating button) to report any issue from anywhere
-Dark theme by default — matches existing CampusOS RPG aesthetic
+Dark theme by default — matches existing Campus Ops RPG aesthetic
 6. OpenAI GPT-4.1-mini Integration Pattern
 Since there is no backend, all OpenAI calls go directly from the React frontend. Store the API key in .env.local as VITE_OPENAI_API_KEY. Never commit this file.
 // src/lib/openai.ts
@@ -145,7 +145,7 @@ You are a lost and found matching AI. Given two item descriptions, return JSON: 
 7. THE MASTER PROMPT
 Copy-paste this entire prompt into Cursor AI / ChatGPT / Claude to execute the refactor. Fill in [REPO PATH] with your local path.
 You are an expert React + TypeScript + TailwindCSS developer.
-I have an existing platform called CampusOS at [REPO PATH].
+I have an existing platform called Campus Ops at [REPO PATH].
 Your job is to refactor it into a focused hackathon demo.
 == HARD RULES ==
 - Frontend only. No backend. No Firebase. No server.
@@ -220,7 +220,7 @@ Cold open
 4 problems typed on screen, one by one. Music build.
 0:10-0:15
 Title card
-CampusOS logo + tagline animation
+Campus Ops logo + tagline animation
 0:15-0:30
 Unified Dashboard
 Scroll through live stat cards, notification feed

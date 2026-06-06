@@ -1,15 +1,15 @@
-# CampusOS: AI-Powered Campus Operations Platform
+# Campus Ops: AI-Powered Campus Operations Platform
 > **Tagline:** "The Intelligent Operating System for Modern Educational Institutions"
 
 ---
 
 ## 1. Executive Summary
 
-### What is CampusOS?
-CampusOS is a unified, intelligent campus operations platform designed to orchestrate and streamline the everyday experiences of students, administrators, faculty, and operations teams. Built as a centralized "Campus Intelligence Layer," it infuses artificial intelligence into the administrative, academic, and community fabric of higher education.
+### What is Campus Ops?
+Campus Ops is a unified, intelligent campus operations platform designed to orchestrate and streamline the everyday experiences of students, administrators, faculty, and operations teams. Built as a centralized "Campus Intelligence Layer," it infuses artificial intelligence into the administrative, academic, and community fabric of higher education.
 
 ### Why it Was Created
-Modern educational institutions are complex, multi-layered environments managing thousands of students, vast physical infrastructures, and constant flows of requests. Traditional campus management systems are siloed, slow, and reactive. CampusOS was created to transition university administration from disjointed forms and manual routing to predictive, automated, and intelligent workflows.
+Modern educational institutions are complex, multi-layered environments managing thousands of students, vast physical infrastructures, and constant flows of requests. Traditional campus management systems are siloed, slow, and reactive. Campus Ops was created to transition university administration from disjointed forms and manual routing to predictive, automated, and intelligent workflows.
 
 ### Problems Solved
 - **Operations Bottlenecks:** Resolves delays in facilities management and student grievances.
@@ -41,7 +41,7 @@ Higher education institutions face operational drag due to legacy software syste
 
 ## 3. Platform Vision
 
-CampusOS is not just a collection of forms; it is a **Campus Intelligence Layer**. 
+Campus Ops is not just a collection of forms; it is a **Campus Intelligence Layer**. 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -70,7 +70,7 @@ The platform moves beyond data entry to introduce:
 
 ## 4. Core Platform Architecture
 
-CampusOS functions through four interconnected layers that coordinate the flow of institutional data:
+Campus Ops functions through four interconnected layers that coordinate the flow of institutional data:
 
 ```
                   ┌────────────────────────┐
@@ -211,11 +211,11 @@ The aggregation layer. It continuously collects operational data, converting it 
 
 ---
 
-## 6. AI Capabilities Across CampusOS
+## 6. AI Capabilities Across Campus Ops
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                      CAMPUSOS AI ENGINE                          │
+│                      Campus Ops AI ENGINE                          │
 └──────────┬───────────────────┬───────────────────┬───────────────┘
            │                   │                   │
   ┌────────▼────────┐ ┌────────▼────────┐ ┌────────▼────────┐
@@ -228,7 +228,7 @@ The aggregation layer. It continuously collects operational data, converting it 
   └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
-CampusOS integrates several artificial intelligence models to drive automation and support users:
+Campus Ops integrates several artificial intelligence models to drive automation and support users:
 
 ### Natural Language Processing (NLP)
 - **Policy Reading:** Extracts insights from large PDFs, translating formal policy text into conversational answers.
@@ -352,6 +352,6 @@ CampusOS integrates several artificial intelligence models to drive automation a
 
 ## 13. Conclusion
 
-CampusOS changes how universities manage their day-to-day operations. By replacing manual paperwork with an **AI-driven intelligence layer**, it helps institutions address issues proactively rather than reactively. 
+Campus Ops changes how universities manage their day-to-day operations. By replacing manual paperwork with an **AI-driven intelligence layer**, it helps institutions address issues proactively rather than reactively. 
 
-From analyzing maintenance trends and resolving student complaints to clarifying policy details, the platform coordinates campus services into a clear, unified workflow. CampusOS helps educational institutions run more efficiently, stay secure, and remain responsive to their student community.
+From analyzing maintenance trends and resolving student complaints to clarifying policy details, the platform coordinates campus services into a clear, unified workflow. Campus Ops helps educational institutions run more efficiently, stay secure, and remain responsive to their student community.

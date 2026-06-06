@@ -12,7 +12,7 @@ import {
   ScanSearch, MapPin, Calendar, RotateCcw, Share2,
   Eye, QrCode, TrendingUp, CheckCircle2,
 } from "lucide-react";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 
 const ITEM_TYPES = [
   { icon: "💳", label: "ID Card" },
@@ -37,7 +37,7 @@ const LOADING_STEPS = [
 ];
 
 export default function LostReport() {
-  const { addLostItem, addNotification } = useCampusOS();
+  const { addLostItem, addNotification } = useCampusOps();
   const [itemType, setItemType] = useState("");
   const [itemName, setItemName] = useState("");
   const [description, setDescription] = useState("");
@@ -127,7 +127,7 @@ export default function LostReport() {
         recommended_action: "Report to the security desk and post in campus groups immediately.",
         best_zones_to_check: [location || "Security Desk", "Lost & Found Box", "Library Help Desk"],
         urgency_level: "Medium",
-        whatsapp_message: `🚨 LOST: ${itemName}\nLast seen at ${location} on ${date}\nCase ID: ${caseId}\nIf found: campusos.app/found`,
+        whatsapp_message: `🚨 LOST: ${itemName}\nLast seen at ${location} on ${date}\nCase ID: ${caseId}\nIf found: Campus Ops.app/found`,
       });
     } finally {
       clearInterval(stepInterval);
@@ -137,7 +137,7 @@ export default function LostReport() {
   };
 
   const qrUrl = result
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(`campusos.app/lost/${result.caseId}`)}&format=svg`
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(`Campus Ops.app/lost/${result.caseId}`)}&format=svg`
     : "";
 
   const shareWhatsApp = () => {
@@ -146,10 +146,10 @@ export default function LostReport() {
   };
   const shareTelegram = () => {
     if (!result) return;
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(`campusos.app/lost/${result.caseId}`)}&text=${encodeURIComponent(result.whatsapp_message)}`, "_blank");
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(`Campus Ops.app/lost/${result.caseId}`)}&text=${encodeURIComponent(result.whatsapp_message)}`, "_blank");
   };
   const copyLink = () => {
-    navigator.clipboard.writeText(`campusos.app/lost/${result.caseId}`);
+    navigator.clipboard.writeText(`Campus Ops.app/lost/${result.caseId}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -199,11 +199,10 @@ export default function LostReport() {
                           <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                             {ITEM_TYPES.map((t) => (
                               <button key={t.label} type="button" onClick={() => setItemType(t.label)}
-                                className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs transition-all ${
-                                  itemType === t.label
+                                className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs transition-all ${itemType === t.label
                                     ? "border-primary bg-primary/5 text-foreground"
                                     : "border-border bg-background text-muted-foreground hover:border-foreground/30"
-                                }`}>
+                                  }`}>
                                 <span className="text-lg">{t.icon}</span>
                                 <span className="text-[9px]">{t.label}</span>
                               </button>
@@ -281,11 +280,11 @@ export default function LostReport() {
                       <p className="text-[8px] font-mono tracking-widest text-muted-foreground uppercase mb-3">AI Does This</p>
                       <div className="space-y-3">
                         {[
-                          { icon: QrCode,      text: "Auto-generates QR code poster" },
-                          { icon: Share2,       text: "Creates WhatsApp & Telegram share links" },
-                          { icon: Eye,          text: "Tracks poster views & QR scans" },
-                          { icon: TrendingUp,   text: "Predicts recovery probability" },
-                          { icon: MapPin,       text: "Recommends zones to check" },
+                          { icon: QrCode, text: "Auto-generates QR code poster" },
+                          { icon: Share2, text: "Creates WhatsApp & Telegram share links" },
+                          { icon: Eye, text: "Tracks poster views & QR scans" },
+                          { icon: TrendingUp, text: "Predicts recovery probability" },
+                          { icon: MapPin, text: "Recommends zones to check" },
                         ].map((f, i) => (
                           <div key={i} className="flex items-center gap-2">
                             <f.icon className="w-3.5 h-3.5 text-primary shrink-0" strokeWidth={1.75} />
@@ -437,10 +436,10 @@ export default function LostReport() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       {[
-                        { label: "Poster Views",    value: 0, icon: Eye,        color: "text-primary" },
-                        { label: "QR Scans",        value: 0, icon: QrCode,     color: "text-indigo-600" },
-                        { label: "Shares",          value: 0, icon: Share2,     color: "text-emerald-600" },
-                        { label: "Potential Matches",value: 0, icon: ScanSearch, color: "text-amber-600" },
+                        { label: "Poster Views", value: 0, icon: Eye, color: "text-primary" },
+                        { label: "QR Scans", value: 0, icon: QrCode, color: "text-indigo-600" },
+                        { label: "Shares", value: 0, icon: Share2, color: "text-emerald-600" },
+                        { label: "Potential Matches", value: 0, icon: ScanSearch, color: "text-amber-600" },
                       ].map((s) => (
                         <div key={s.label} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">

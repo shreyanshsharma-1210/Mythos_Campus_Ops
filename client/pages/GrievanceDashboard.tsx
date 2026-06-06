@@ -7,28 +7,28 @@ import {
   PieChart, Pie, Legend,
 } from "recharts";
 import { PageLayout } from "@/components/PageLayout";
-import { useCampusOS } from "@/contexts/CampusOSContext";
+import { useCampusOps } from "@/contexts/CampusOpsContext";
 import {
   AlertTriangle, Users, GitMerge, FileText, TrendingUp, Clock,
 } from "lucide-react";
 
 const RISK_COLORS: Record<string, string> = {
   Critical: "bg-destructive/10 text-destructive border-destructive/30",
-  High:     "bg-amber-500/10 text-amber-600 border-amber-500/30",
-  Medium:   "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
-  Low:      "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+  High: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+  Medium: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
+  Low: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
 };
 
 const COL_ACCENT: Record<string, string> = {
-  Pending:    "border-l-destructive",
-  "In Review":"border-l-amber-500",
-  Resolved:   "border-l-emerald-500",
+  Pending: "border-l-destructive",
+  "In Review": "border-l-amber-500",
+  Resolved: "border-l-emerald-500",
 };
 
 const COL_DOT: Record<string, string> = {
-  Pending:    "bg-destructive",
-  "In Review":"bg-amber-500",
-  Resolved:   "bg-emerald-500",
+  Pending: "bg-destructive",
+  "In Review": "bg-amber-500",
+  Resolved: "bg-emerald-500",
 };
 
 const PIE_COLORS = ["#ef4444", "#f59e0b", "#eab308", "#10b981"];
@@ -42,14 +42,14 @@ function RiskBadge({ level, risk }: { level: string; risk: number }) {
 }
 
 export default function GrievanceDashboard() {
-  const { grievances } = useCampusOS();
+  const { grievances } = useCampusOps();
   const [filter, setFilter] = useState<"all" | "critical">("all");
 
   const displayed =
     filter === "critical"
       ? grievances.filter(
-          (g) => g.escalationRiskLevel === "Critical" || g.escalationRiskLevel === "High"
-        )
+        (g) => g.escalationRiskLevel === "Critical" || g.escalationRiskLevel === "High"
+      )
       : grievances;
 
   const totalAffected = grievances.reduce((s, g) => s + (g.affectedStudents || 0), 0);
@@ -116,13 +116,12 @@ export default function GrievanceDashboard() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
-                  filter === f
+                className={`px-4 py-1.5 rounded-xl text-sm font-medium border transition-colors ${filter === f
                     ? f === "critical"
                       ? "bg-destructive text-white border-destructive"
                       : "bg-primary text-primary-foreground border-primary"
                     : "bg-white border-border text-muted-foreground hover:border-foreground/30"
-                }`}
+                  }`}
               >
                 {f === "all" ? "All Grievances" : "⚠ High Risk"}
               </button>
@@ -133,10 +132,10 @@ export default function GrievanceDashboard() {
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Total Tickets",    value: grievances.length, icon: FileText,     color: "text-primary",     bg: "bg-primary/5" },
-            { label: "Critical Flags",   value: criticalCount,     icon: AlertTriangle, color: "text-destructive", bg: "bg-destructive/5" },
-            { label: "Duplicates Merged",value: totalDuplicates,   icon: GitMerge,      color: "text-amber-600",   bg: "bg-amber-500/5" },
-            { label: "Students Affected",value: totalAffected,     icon: Users,         color: "text-indigo-600",  bg: "bg-indigo-500/5" },
+            { label: "Total Tickets", value: grievances.length, icon: FileText, color: "text-primary", bg: "bg-primary/5" },
+            { label: "Critical Flags", value: criticalCount, icon: AlertTriangle, color: "text-destructive", bg: "bg-destructive/5" },
+            { label: "Duplicates Merged", value: totalDuplicates, icon: GitMerge, color: "text-amber-600", bg: "bg-amber-500/5" },
+            { label: "Students Affected", value: totalAffected, icon: Users, color: "text-indigo-600", bg: "bg-indigo-500/5" },
           ].map((stat, i) => (
             <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
               <Card className="bg-white border-border shadow-sm rounded-xl">
@@ -219,8 +218,8 @@ export default function GrievanceDashboard() {
                   <Bar dataKey="count" radius={[0, 4, 4, 0]}>
                     {statusData.map((entry, i) => (
                       <Cell key={i} fill={
-                        entry.name === "Pending"    ? "#ef4444" :
-                        entry.name === "In Review"  ? "#f59e0b" : "#10b981"
+                        entry.name === "Pending" ? "#ef4444" :
+                          entry.name === "In Review" ? "#f59e0b" : "#10b981"
                       } />
                     ))}
                   </Bar>
@@ -238,10 +237,10 @@ export default function GrievanceDashboard() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: "Avg SLA Hours",     value: `${avgSLA}h`,        icon: Clock,      color: "text-indigo-600" },
-                  { label: "Resolution Rate",   value: `${Math.round((grievances.filter(g=>g.status==="Resolved").length/grievances.length)*100)}%`, icon: TrendingUp, color: "text-emerald-600" },
-                  { label: "High Risk Tickets", value: grievances.filter(g=>g.escalationRisk>=60).length, icon: AlertTriangle, color: "text-amber-600" },
-                  { label: "Avg Affected",      value: Math.round(totalAffected/grievances.length), icon: Users, color: "text-primary" },
+                  { label: "Avg SLA Hours", value: `${avgSLA}h`, icon: Clock, color: "text-indigo-600" },
+                  { label: "Resolution Rate", value: `${Math.round((grievances.filter(g => g.status === "Resolved").length / grievances.length) * 100)}%`, icon: TrendingUp, color: "text-emerald-600" },
+                  { label: "High Risk Tickets", value: grievances.filter(g => g.escalationRisk >= 60).length, icon: AlertTriangle, color: "text-amber-600" },
+                  { label: "Avg Affected", value: Math.round(totalAffected / grievances.length), icon: Users, color: "text-primary" },
                 ].map((m) => (
                   <div key={m.label} className="bg-secondary/40 rounded-xl p-4">
                     <m.icon className={`w-4 h-4 ${m.color} mb-2`} strokeWidth={1.75} />
@@ -305,11 +304,10 @@ export default function GrievanceDashboard() {
                             </div>
                             <div className="w-full bg-secondary rounded-full h-1.5">
                               <div
-                                className={`h-1.5 rounded-full ${
-                                  g.escalationRisk >= 80 ? "bg-destructive" :
-                                  g.escalationRisk >= 60 ? "bg-amber-500" :
-                                  g.escalationRisk >= 40 ? "bg-yellow-400" : "bg-emerald-500"
-                                }`}
+                                className={`h-1.5 rounded-full ${g.escalationRisk >= 80 ? "bg-destructive" :
+                                    g.escalationRisk >= 60 ? "bg-amber-500" :
+                                      g.escalationRisk >= 40 ? "bg-yellow-400" : "bg-emerald-500"
+                                  }`}
                                 style={{ width: `${g.escalationRisk}%` }}
                               />
                             </div>

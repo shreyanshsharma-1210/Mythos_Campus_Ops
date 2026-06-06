@@ -1,4 +1,4 @@
-# CampusOS — The Real Master Plan
+# Campus Ops — The Real Master Plan
 ## *"We didn't build features. We built the nervous system of a campus."*
 
 ---
@@ -16,7 +16,7 @@ Every college in India has the same 4 invisible crises happening simultaneously:
 **Crisis 4:** The electricity in Block C trips every Monday at 9 PM for 6 weeks straight. Every week, a student files a new complaint. Every week a different electrician "fixes" it. Nobody ever looks at the pattern. It trips again next Monday.
 
 **These are not tech problems. These are coordination failures.**
-**CampusOS is the coordination layer that was always missing.**
+**Campus Ops is the coordination layer that was always missing.**
 
 ---
 
@@ -26,7 +26,7 @@ Four deeply connected modules that share one brain (GPT-4.1-mini), one design la
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      CampusOS                               │
+│                      Campus Ops                               │
 │              "The Campus Nervous System"                    │
 │                                                             │
 │   🧠 AI Brain: GPT-4.1-mini (one shared intelligence)      │
@@ -356,7 +356,7 @@ Confidence color coding:
 
 After handover confirmed: A small "Reunited ✓" celebration moment — confetti burst (CSS keyframe), card turns green, moves to "Resolved" section.
 
-Karma Points (tie-in to existing CampusOS RPG layer):
+Karma Points (tie-in to existing Campus Ops RPG layer):
 - Return an item: +50 XP, +10 Karma Points, "Good Samaritan" badge
 - This is shown prominently to encourage returns
 - Leaderboard of top item returners this month
@@ -397,7 +397,7 @@ This is the first screen in the video. It needs to make a judge's jaw drop in 10
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  🏫 CampusOS    [Grievance] [Maintenance] [Policy] [Lost+Found] │
+│  🏫 Campus Ops    [Grievance] [Maintenance] [Policy] [Lost+Found] │
 ├──────────┬──────────┬──────────┬──────────────────────────────  │
 │  14      │  7       │  203     │  6                             │
 │ Open     │ Critical │ Policy   │ Unmatched                      │
@@ -584,7 +584,7 @@ Black screen. Text appears one line at a time, typewriter effect:
 "The broken AC had been reported 7 times that month."
 ```
 Last line: "We built the fix."
-CampusOS logo appears. Music hits.
+Campus Ops logo appears. Music hits.
 
 **0:12 – 0:22 | MISSION CONTROL**
 Screen recording: Dashboard opens. The live activity feed is scrolling. Stats cards are counting up. The mini-heatmap Block C is glowing red.
@@ -616,7 +616,7 @@ Tech stack listed simply: React + TypeScript + D3.js + GPT-4.1-mini.
 
 **1:52 – 2:00 | CLOSE**
 Return to dashboard. Live feed still scrolling.
-Text fades in: *"CampusOS. Not a feature. The nervous system."*
+Text fades in: *"Campus Ops. Not a feature. The nervous system."*
 Team name. Fade to black.
 
 ---

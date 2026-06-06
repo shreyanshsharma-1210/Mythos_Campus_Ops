@@ -18,7 +18,7 @@ export interface PolicyDoc {
   text: string;
 }
 
-interface CampusOSContextType {
+interface CampusOpsContextType {
   grievances: any[];
   addGrievance: (grievance: any) => void;
   updateGrievanceStatus: (id: string, status: string) => void;
@@ -38,9 +38,9 @@ interface CampusOSContextType {
   togglePolicyDocumentActive: (id: string) => void;
 }
 
-const CampusOSContext = createContext<CampusOSContextType | undefined>(undefined);
+const CampusOpsContext = createContext < CampusOpsContextType | undefined > (undefined);
 
-export function CampusOSProvider({ children }: { children: ReactNode }) {
+export function CampusOpsProvider({ children }: { children: ReactNode }) {
   const [grievances, setGrievances] = useState<any[]>(mockGrievances);
   const [maintenanceReports, setMaintenanceReports] = useState<any[]>(mockMaintenanceIssues);
   const [lostItems, setLostItems] = useState<any[]>(mockLostItems);
@@ -106,7 +106,7 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
   };
 
   const updateMaintenanceReport = (id: string, updates: any) => {
-    setMaintenanceReports((prev) => 
+    setMaintenanceReports((prev) =>
       prev.map(r => r.id === id ? { ...r, ...updates } : r)
     );
   };
@@ -147,7 +147,7 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CampusOSContext.Provider
+    <CampusOpsContext.Provider
       value={{
         grievances,
         addGrievance,
@@ -169,14 +169,14 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </CampusOSContext.Provider>
+    </CampusOpsContext.Provider>
   );
 }
 
-export function useCampusOS() {
-  const context = useContext(CampusOSContext);
+export function useCampusOps() {
+  const context = useContext(CampusOpsContext);
   if (!context) {
-    throw new Error('useCampusOS must be used within a CampusOSProvider');
+    throw new Error('useCampusOps must be used within a CampusOpsProvider');
   }
   return context;
 }

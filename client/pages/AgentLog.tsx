@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
 import { FloatingTopBar } from "@/components/FloatingTopBar";
 import { useSidebar } from "@/contexts/SidebarContext";
-import { useCampusOS } from "../contexts/CampusOSContext";
+import { useCampusOps } from "../contexts/CampusOpsContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Bot,
@@ -31,13 +31,13 @@ interface LogEntry {
   id: string;
   timestamp: string;
   type:
-    | "status"
-    | "thinking"
-    | "tool_start"
-    | "tool_end"
-    | "done"
-    | "error"
-    | "action";
+  | "status"
+  | "thinking"
+  | "tool_start"
+  | "tool_end"
+  | "done"
+  | "error"
+  | "action";
   content?: string;
   tool?: string;
   input?: any;
@@ -96,7 +96,7 @@ function now() {
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function AgentLog() {
   const { isCollapsed, setIsCollapsed } = useSidebar();
-  const { grievances, maintenanceReports, lostItems, foundItems } = useCampusOS();
+  const { grievances, maintenanceReports, lostItems, foundItems } = useCampusOps();
   const isMobile = useIsMobile();
 
   const [running, setRunning] = useState(false);
@@ -235,9 +235,8 @@ export default function AgentLog() {
       <FloatingTopBar isCollapsed={isCollapsed} />
 
       <motion.div
-        className={`transition-all duration-300 ${
-          isMobile ? "ml-0" : isCollapsed ? "ml-20" : "ml-72"
-        } pt-24 ${isMobile ? "p-4" : "p-8"} min-h-screen max-w-[1600px] mx-auto`}
+        className={`transition-all duration-300 ${isMobile ? "ml-0" : isCollapsed ? "ml-20" : "ml-72"
+          } pt-24 ${isMobile ? "p-4" : "p-8"} min-h-screen max-w-[1600px] mx-auto`}
         animate={{ marginLeft: isMobile ? 0 : isCollapsed ? 80 : 272 }}
       >
         {/* ── Header ── */}

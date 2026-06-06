@@ -201,7 +201,7 @@ const CampusDashboardWrapper: React.FC<{ children?: React.ReactNode }> = ({ chil
         <div className="relative w-full font-sans text-slate-800 overflow-visible flex flex-col min-h-screen">
             <Background />
 
-            {/* Header - Optional: Keep or Remove based on user preference. Keeping for CampusOS feel. */}
+            {/* Header - Optional: Keep or Remove based on user preference. Keeping for Campus Ops feel. */}
             <header className="absolute top-0 w-full z-10 px-6 py-4 flex justify-between items-center text-slate-400 pointer-events-none">
                 <div className="flex items-center gap-2 pointer-events-auto">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
