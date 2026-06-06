@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="../public/images/logo.png" alt="CampusOS Logo" width="120" height="120" />
-
-# ⚡ CAMPUS OS
+# ⚡ CAMPUS OPS
 
 ### *The Intelligent Operating System for Modern Education*
 
@@ -24,9 +22,9 @@
 [![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.2.0-brightgreen?style=for-the-badge)](https://github.com/Aditya-Kumrawat/Campus-OS)
+[![Version](https://img.shields.io/badge/Version-1.2.0-brightgreen?style=for-the-badge)](https://github.com/Aditya-Kumrawat/Campus-Ops)
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)]()
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-orange?style=for-the-badge)](https://github.com/Aditya-Kumrawat/Campus-OS/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-orange?style=for-the-badge)](https://github.com/Aditya-Kumrawat/Campus-Ops/pulls)
 
 <br/>
 
@@ -51,7 +49,7 @@
 ### 🏠 Landing Page — The First Impression
 
 <div align="center">
-<img src="readme%20assests/Screenshot%202026-06-06%20172255.png" alt="CampusOS Landing Page" width="100%" />
+<img src="readme%20assests/Screenshot%202026-06-06%20172255.png" alt="Campus Ops Landing Page" width="100%" />
 <br/><em>The Next Generation of Intelligent Campus Management</em>
 </div>
 
@@ -107,10 +105,10 @@
 
 ---
 
-### 🤖 CampusOS Agent — LangGraph AI in Action
+### 🤖 Campus Ops Agent — LangGraph AI in Action
 
 <div align="center">
-<img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.49.37%20PM.jpeg" alt="CampusOS LangGraph AI Agent Live Log" width="100%" />
+<img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.49.37%20PM.jpeg" alt="Campus Ops LangGraph AI Agent Live Log" width="100%" />
 <br/><em>Autonomous AI agent — escalating tickets, matching items, and sending notifications in real time.</em>
 </div>
 
@@ -127,13 +125,36 @@
 
 <br/>
 
+---
+
+### 📊 Project Pitch Deck
+
+You can access the interactive HTML pitch deck here: [CampusOps-Deck.html](CampusOps-Deck.html).
+
+<p align="center">
+  <table>
+    <tr>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.45.36%20PM.jpeg" alt="Slide 1" style="width:100%"/></td>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.47.08%20PM.jpeg" alt="Slide 2" style="width:100%"/></td>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.47.49%20PM.jpeg" alt="Slide 3" style="width:100%"/></td>
+    </tr>
+    <tr>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.48.19%20PM.jpeg" alt="Slide 4" style="width:100%"/></td>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.49.37%20PM.jpeg" alt="Slide 5" style="width:100%"/></td>
+      <td width="33%"><img src="readme%20assests/WhatsApp%20Image%202026-06-06%20at%205.52.13%20PM.jpeg" alt="Slide 6" style="width:100%"/></td>
+    </tr>
+  </table>
+</p>
+
 <br/>
 
 ---
 
 ## 📋 Table of Contents
 
-- [🌍 What is Campus OS?](#-what-is-campus-os)
+- [📸 Platform Preview](#-platform-preview)
+- [📊 Project Pitch Deck](#-project-pitch-deck)
+- [🌍 What is Campus Ops?](#-what-is-campus-ops)
 - [💥 The Problem We Solve](#-the-problem-we-solve)
 - [🎮 The Hunter System — Gamified Campus Life](#-the-hunter-system--gamified-campus-life)
 - [🤖 AI & Intelligence Engine](#-ai--intelligence-engine)
@@ -154,11 +175,11 @@
 
 ---
 
-## 🌍 What is Campus OS?
+## 🌍 What is Campus Ops?
 
-**Campus OS** is not a student portal. It is the **central nervous system of a modern university** — an all-in-one, AI-powered platform that transforms how students learn, how administrators operate, and how campuses function.
+**Campus Ops** is not a student portal. It is the **central nervous system of a modern university** — an all-in-one, AI-powered platform that transforms how students learn, how administrators operate, and how campuses function.
 
-Built at the intersection of **generative AI, gamification psychology, and operational intelligence**, Campus OS reimagines every touchpoint of campus life:
+Built at the intersection of **generative AI, gamification psychology, and operational intelligence**, Campus Ops reimagines every touchpoint of campus life:
 
 - A **student files a grievance** → AI classifies, routes, and escalates it automatically
 - A **student loses their laptop** → AI semantically matches it with a found item in seconds
@@ -173,9 +194,9 @@ This is education, **leveled up**.
 
 ## 💥 The Problem We Solve
 
-Every university faces the same 10 operational nightmares. Campus OS eliminates all of them:
+Every university faces the same 10 operational nightmares. Campus Ops eliminates all of them:
 
-| # | Problem | Campus OS Solution |
+| # | Problem | Campus Ops Solution |
 |---|---------|-------------------|
 | 🧱 | **Siloed Portals** — students juggle 5+ separate systems | Unified single-platform experience |
 | 📉 | **Academic Void** — no real-time feedback on progress | Live attendance tracking + predictive alerts |
@@ -196,11 +217,11 @@ Every university faces the same 10 operational nightmares. Campus OS eliminates 
 
 > *Your campus is no longer a place. It's a world. And you are the Hunter.*
 
-Campus OS transforms university life into a **living RPG** — where every lecture attended, every wellness break taken, and every connection made earns you real-world rewards and skill progression.
+Campus Ops transforms university life into a **living RPG** — where every lecture attended, every wellness break taken, and every connection made earns you real-world rewards and skill progression.
 
 ### 🏹 Hunter's Hub — Your 3D Command Center
 
-The centerpiece of Campus OS is the **Hunter's Hub** — a breathtaking 3D dashboard where your anime-style character evolves as you level up in real life.
+The centerpiece of Campus Ops is the **Hunter's Hub** — a breathtaking 3D dashboard where your anime-style character evolves as you level up in real life.
 
 ```
 ╔══════════════════════════════════════════════════════╗
@@ -270,7 +291,7 @@ Tap phones to trigger **Synergy Duels** — real-time trivia mini-games that rew
 
 ## 🤖 AI & Intelligence Engine
 
-Campus OS is powered by a multi-model AI stack that works autonomously in the background — classifying, matching, routing, predicting, and alerting without any human intervention.
+Campus Ops is powered by a multi-model AI stack that works autonomously in the background — classifying, matching, routing, predicting, and alerting without any human intervention.
 
 ### 🧠 Multi-Model Architecture
 
@@ -564,7 +585,7 @@ LANGGRAPH AGENT LOG — LIVE STREAM
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║                        CAMPUS OS ARCHITECTURE                        ║
+║                        CAMPUS OPS ARCHITECTURE                        ║
 ╠══════════════════════╦═══════════════════════════════════════════════╣
 ║                      ║                                               ║
 ║   FRONTEND (React)   ║              BACKEND (Express)                ║
@@ -671,7 +692,7 @@ React Context (Client State)
 ## 📁 Project Structure
 
 ```
-campus-os/
+campus-ops/
 │
 ├── 📁 client/                        # React SPA
 │   ├── 📁 pages/                     # 25+ route pages
@@ -695,7 +716,7 @@ campus-os/
 │   │   └── Admin*.tsx               # Admin panel suite
 │   │
 │   ├── 📁 components/
-│   │   ├── 📁 campus-os/            # 🎮 Gamification components
+│   │   ├── 📁 campus-ops/            # 🎮 Gamification components
 │   │   │   ├── CharacterViewer.tsx  # 3D character renderer
 │   │   │   ├── QuestPanel.tsx       # Quest matrix
 │   │   │   ├── StatusPanel.tsx      # Radar stat chart
@@ -756,8 +777,8 @@ npm --version    # >= 9.0.0
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/Aditya-Kumrawat/Campus-OS.git
-cd Campus-OS
+git clone https://github.com/shreyanshsharma-1210/Mythos_Campus_Ops
+cd Mythos_Campus_Ops
 npm install
 ```
 
@@ -787,8 +808,8 @@ npm start        # Starts production server on :3000
 ### 5. Docker Deployment
 
 ```bash
-docker build -t campus-os .
-docker run -p 3000:3000 --env-file .env campus-os
+docker build -t campus-ops .
+docker run -p 3000:3000 --env-file .env campus-ops
 ```
 
 <br/>
@@ -842,7 +863,7 @@ RESEND_TO_EMAIL=admin@campus.edu
 
 ## 👥 Roles & Access Control
 
-Campus OS implements a three-tier role system with route-level protection:
+Campus Ops implements a three-tier role system with route-level protection:
 
 | Role | Access | Demo Credentials |
 |------|--------|-----------------|
@@ -957,7 +978,7 @@ We welcome contributions from the community! Here's how to get involved:
 
 ## 🔒 Security & Compliance
 
-Campus OS is built with data privacy and security at its core:
+Campus Ops is built with data privacy and security at its core:
 
 | Standard | Status |
 |----------|--------|
@@ -996,21 +1017,17 @@ copies or substantial portions of the Software.
 
 <div align="center">
 
-### Built with ❤️ by [Aditya Kumrawat](https://github.com/Aditya-Kumrawat)
+### Built with ❤️ by Team Mythos
 
-*Campus OS — Because your campus deserves an operating system.*
-
-<br/>
-
-[![GitHub](https://img.shields.io/badge/GitHub-Aditya--Kumrawat-181717?style=for-the-badge&logo=github)](https://github.com/Aditya-Kumrawat/Campus-OS)
-[![Stars](https://img.shields.io/github/stars/Aditya-Kumrawat/Campus-OS?style=for-the-badge&color=yellow)](https://github.com/Aditya-Kumrawat/Campus-OS/stargazers)
+*Campus Ops — Because your campus deserves an operating system.*
 
 <br/>
 
-*If Campus OS saved you time, gave you ideas, or just blew your mind — drop a ⭐ on GitHub.*
+
+*If Campus Ops saved you time, gave you ideas, or just blew your mind — drop a ⭐ on GitHub.*
 
 ---
 
-**[⬆ Back to Top](#-campus-os)**
+**[⬆ Back to Top](#-campus-ops)**
 
 </div>
