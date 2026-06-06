@@ -53,3 +53,7 @@ supabase/
 .netlify
 
 # Pages folder
+
+# Vite cache
+.vite/
+

@@ -30,8 +30,7 @@
     "paths": {
       "@/*": ["./client/*"],
       "@shared/*": ["./shared/*"]
-    },
-    "ignoreDeprecations": "6.0"
+    }
   },
   "include": [
     "client/**/*",

@@ -19,6 +19,12 @@ import {
   Activity,
   Flag,
   Zap,
+  GraduationCap,
+  ShieldAlert,
+  UtensilsCrossed,
+  Award,
+  LayoutDashboard,
+  Bot,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -29,13 +35,46 @@ interface FloatingSidebarProps {
   userType?: "teacher" | "student";
 }
 
-const NAV_ITEMS = [
-  { id: "home",       label: "Dashboard",       icon: LayoutGrid, href: "/dashboard2" },
-  { id: "grievances", label: "Grievances",       icon: Flag,        href: "/grievances/submit" },
-  { id: "maintenance",label: "Maintenance",      icon: Wrench,      href: "/maintenance/report" },
-  { id: "policy",     label: "Policy Navigator", icon: BookOpen,    href: "/policy" },
-  { id: "lost-found", label: "Lost & Found",     icon: ScanSearch,  href: "/lost-found" },
-  { id: "heatmap",    label: "Heatmap",          icon: Activity,    href: "/heatmap" },
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  href: string;
+}
+
+interface NavSection {
+  heading: string;
+  items: NavItem[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    heading: "Modules",
+    items: [
+      { id: "home",        label: "Dashboard",       icon: LayoutGrid,       href: "/dashboard2" },
+      { id: "grievances",  label: "Grievances",       icon: Flag,             href: "/grievances/submit" },
+      { id: "maintenance", label: "Maintenance",      icon: Wrench,           href: "/maintenance/report" },
+      { id: "policy",      label: "Policy Navigator", icon: BookOpen,         href: "/policy" },
+      { id: "lost-found",  label: "Lost & Found",     icon: ScanSearch,       href: "/lost-found" },
+      { id: "heatmap",     label: "Heatmap",          icon: Activity,         href: "/heatmap" },
+    ],
+  },
+  {
+    heading: "Intelligence",
+    items: [
+      { id: "attendance",   label: "Attendance",      icon: GraduationCap,    href: "/attendance" },
+      { id: "anti-ragging", label: "Anti-Ragging",    icon: ShieldAlert,      href: "/anti-ragging" },
+      { id: "canteen",      label: "Canteen",          icon: UtensilsCrossed,  href: "/canteen" },
+      { id: "scholarships", label: "Scholarships",    icon: Award,            href: "/scholarships" },
+      { id: "agent",        label: "AI Agent",         icon: Bot,              href: "/agent" },
+    ],
+  },
+  {
+    heading: "Admin",
+    items: [
+      { id: "admin", label: "Admin Panel", icon: LayoutDashboard, href: "/admin" },
+    ],
+  },
 ];
 
 export const FloatingSidebar = ({
@@ -113,72 +152,82 @@ export const FloatingSidebar = ({
           </div>
 
           {/* ── Navigation ── */}
-          <div className="flex-1 overflow-y-auto p-2 space-y-px">
-            {!isCollapsed && (
-              <p className="text-[8px] font-mono font-bold text-muted-foreground tracking-widest uppercase px-2 pt-2 pb-2">
-                Modules
-              </p>
-            )}
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {NAV_SECTIONS.map((section) => (
+              <div key={section.heading}>
+                {!isCollapsed && (
+                  <p className="text-[8px] font-mono font-bold text-muted-foreground tracking-widest uppercase px-2 pt-3 pb-1.5">
+                    {section.heading}
+                  </p>
+                )}
+                <div className="space-y-px">
+                  {section.items.map((item) => {
+                    const active = isActive(item.href);
 
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(item.href);
-
-              const button = (
-                <motion.button
-                  key={item.id}
-                  onClick={() => navigate(item.href)}
-                  className={cn(
-                    "w-full flex items-center rounded-xl transition-colors duration-100 group",
-                    isCollapsed ? "p-2 justify-center" : "px-3 py-2.5 gap-3",
-                    active
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-secondary"
-                  )}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  <item.icon
-                    size={17}
-                    strokeWidth={1.75}
-                    className={cn(
-                      "shrink-0 transition-colors",
-                      active
-                        ? "text-primary-foreground"
-                        : "text-muted-foreground group-hover:text-foreground"
-                    )}
-                  />
-
-                  <AnimatePresence initial={false}>
-                    {!isCollapsed && (
-                      <motion.span
-                        className="text-sm font-medium text-left truncate leading-none"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.12 }}
+                    const button = (
+                      <motion.button
+                        key={item.id}
+                        onClick={() => navigate(item.href)}
+                        className={cn(
+                          "w-full flex items-center rounded-xl transition-colors duration-100 group",
+                          isCollapsed ? "p-2 justify-center" : "px-3 py-2.5 gap-3",
+                          active
+                            ? "bg-primary text-primary-foreground"
+                            : "text-foreground hover:bg-secondary"
+                        )}
+                        whileTap={{ scale: 0.97 }}
                       >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </motion.button>
-              );
+                        {(() => {
+                          const IconComponent = item.icon as any;
+                          return (
+                            <IconComponent
+                              size={17}
+                              strokeWidth={1.75}
+                              className={cn(
+                                "shrink-0 transition-colors",
+                                active
+                                  ? "text-primary-foreground"
+                                  : "text-muted-foreground group-hover:text-foreground"
+                              )}
+                            />
+                          );
+                        })()}
 
-              if (isCollapsed) {
-                return (
-                  <Tooltip key={item.id}>
-                    <TooltipTrigger asChild>{button}</TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      className="font-mono text-xs tracking-widest uppercase"
-                    >
-                      {item.label}
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              }
+                        <AnimatePresence initial={false}>
+                          {!isCollapsed && (
+                            <motion.span
+                              className="text-sm font-medium text-left truncate leading-none"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.12 }}
+                            >
+                              {item.label}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </motion.button>
+                    );
 
-              return <Fragment key={item.id}>{button}</Fragment>;
-            })}
+                    if (isCollapsed) {
+                      return (
+                        <Tooltip key={item.id}>
+                          <TooltipTrigger asChild>{button}</TooltipTrigger>
+                          <TooltipContent
+                            side="right"
+                            className="font-mono text-xs tracking-widest uppercase"
+                          >
+                            {item.label}
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    }
+
+                    return <Fragment key={item.id}>{button}</Fragment>;
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* ── Footer ── */}
@@ -196,7 +245,7 @@ export const FloatingSidebar = ({
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl"
                 >
                   <Avatar className="w-7 h-7 shrink-0">
-                    <AvatarImage src={currentUser?.photoURL || ""} />
+                    <AvatarImage src={""} />
                     <AvatarFallback className="text-[10px] font-display font-black bg-secondary text-foreground">
                       {initials}
                     </AvatarFallback>
@@ -220,7 +269,7 @@ export const FloatingSidebar = ({
                   className="flex justify-center py-1"
                 >
                   <Avatar className="w-7 h-7">
-                    <AvatarImage src={currentUser?.photoURL || ""} />
+                    <AvatarImage src={""} />
                     <AvatarFallback className="text-[10px] font-display font-black bg-secondary text-foreground">
                       {initials}
                     </AvatarFallback>

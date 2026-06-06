@@ -23,6 +23,20 @@ import FoundReport from "./pages/FoundReport";
 import MatchFeed from "./pages/MatchFeed";
 import HeatmapView from "./pages/HeatmapView";
 
+// Admin
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminGrievances from "./pages/AdminGrievances";
+import AdminMaintenance from "./pages/AdminMaintenance";
+import AdminLostFound from "./pages/AdminLostFound";
+import AdminPolicy from "./pages/AdminPolicy";
+
+// New Modules
+import AttendanceIntelligence from "./pages/AttendanceIntelligence";
+import AntiRagging from "./pages/AntiRagging";
+import CanteenPredictor from "./pages/CanteenPredictor";
+import ScholarshipFinder from "./pages/ScholarshipFinder";
+import AgentLog from "./pages/AgentLog";
+
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
@@ -50,6 +64,20 @@ const App = () => (
             <Route path="/found" element={<FoundReport />} />
             <Route path="/lost-found" element={<MatchFeed />} />
             <Route path="/heatmap" element={<HeatmapView />} />
+
+            {/* Admin */}
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/grievances" element={<AdminGrievances />} />
+            <Route path="/admin/maintenance" element={<AdminMaintenance />} />
+            <Route path="/admin/lost-found" element={<AdminLostFound />} />
+            <Route path="/admin/policy" element={<AdminPolicy />} />
+
+            {/* New Modules */}
+            <Route path="/attendance" element={<AttendanceIntelligence />} />
+            <Route path="/anti-ragging" element={<AntiRagging />} />
+            <Route path="/canteen" element={<CanteenPredictor />} />
+            <Route path="/scholarships" element={<ScholarshipFinder />} />
+            <Route path="/agent" element={<AgentLog />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

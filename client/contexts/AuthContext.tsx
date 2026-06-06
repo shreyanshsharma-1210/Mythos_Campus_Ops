@@ -12,8 +12,8 @@ interface User {
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
-  login: (email?: string, password?: string) => Promise<void> | void;
-  signup: (email?: string, password?: string, name?: string, role?: "teacher" | "student" | "admin") => Promise<void> | void;
+  login: (email?: string, password?: string) => void;
+  signup: (email?: string, password?: string, displayName?: string, role?: 'student' | 'teacher' | 'admin') => void;
   logout: () => void;
 }
 
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const [loading, setLoading] = useState(false);
 
-  const login = async (email?: string, password?: string) => {
+  const login = (email?: string, password?: string) => {
     setCurrentUser({
       uid: 'mock-user-123',
       email: email || 'student@campus.edu',
@@ -37,11 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const signup = async (email?: string, password?: string, name?: string, role?: "teacher" | "student" | "admin") => {
+  const signup = (
+    email?: string,
+    password?: string,
+    displayName?: string,
+    role?: 'student' | 'teacher' | 'admin'
+  ) => {
     setCurrentUser({
       uid: 'mock-user-123',
       email: email || 'student@campus.edu',
-      displayName: name || 'Mock Student',
+      displayName: displayName || 'Mock User',
       role: role || 'student'
     });
   };

@@ -11,9 +11,11 @@ type Notification = {
 interface CampusOSContextType {
   grievances: any[];
   addGrievance: (grievance: any) => void;
+  updateGrievanceStatus: (id: string, status: string) => void;
   maintenanceReports: any[];
   addMaintenanceReport: (report: any) => void;
   updateMaintenanceReport: (id: string, updates: any) => void;
+  updateMaintenanceStatus: (id: string, status: string) => void;
   lostItems: any[];
   addLostItem: (item: any) => void;
   foundItems: any[];
@@ -40,6 +42,12 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
     setGrievances((prev) => [grievance, ...prev]);
   };
 
+  const updateGrievanceStatus = (id: string, status: string) => {
+    setGrievances((prev) =>
+      prev.map(g => g.id === id ? { ...g, status } : g)
+    );
+  };
+
   const addMaintenanceReport = (report: any) => {
     setMaintenanceReports((prev) => [report, ...prev]);
   };
@@ -47,6 +55,12 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
   const updateMaintenanceReport = (id: string, updates: any) => {
     setMaintenanceReports((prev) => 
       prev.map(r => r.id === id ? { ...r, ...updates } : r)
+    );
+  };
+
+  const updateMaintenanceStatus = (id: string, status: string) => {
+    setMaintenanceReports((prev) =>
+      prev.map(r => r.id === id ? { ...r, status } : r)
     );
   };
 
@@ -70,9 +84,11 @@ export function CampusOSProvider({ children }: { children: ReactNode }) {
       value={{
         grievances,
         addGrievance,
+        updateGrievanceStatus,
         maintenanceReports,
         addMaintenanceReport,
         updateMaintenanceReport,
+        updateMaintenanceStatus,
         lostItems,
         addLostItem,
         foundItems,

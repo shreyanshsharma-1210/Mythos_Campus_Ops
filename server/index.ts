@@ -7,6 +7,8 @@ import {
   handleVapiCall,
   handleVapiTest,
 } from "./routes/vapi-proxy";
+import { handleWhatsAppSend } from "./routes/whatsapp";
+import { handleCampusAgent } from "./routes/campus-agent";
 
 export function createServer() {
   const app = express();
@@ -23,9 +25,15 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // WhatsApp / Resend notifications
+  app.post("/api/whatsapp/send", handleWhatsAppSend);
+
   app.get("/api/vapi/test", handleVapiTest);
   app.post("/api/vapi/call", handleVapiCall);
   app.all("/api/vapi/:endpoint", handleVapiProxy);
+
+  // Campus AI Agent (SSE streaming)
+  app.post("/api/campus-agent", handleCampusAgent);
 
   app.get("/api/pdf/health", async (req, res) => {
     res.json({ status: 'ok', message: 'PDF processor is running' });
