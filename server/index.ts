@@ -9,6 +9,7 @@ import {
 } from "./routes/vapi-proxy";
 import { handleWhatsAppSend } from "./routes/whatsapp";
 import { handleCampusAgent } from "./routes/campus-agent";
+import { createStoreRouter } from "./routes/store";
 
 export function createServer() {
   const app = express();
@@ -24,6 +25,9 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Shared in-memory store (all tabs/users read & write here)
+  app.use("/api/store", createStoreRouter());
 
   // WhatsApp / Resend notifications
   app.post("/api/whatsapp/send", handleWhatsAppSend);

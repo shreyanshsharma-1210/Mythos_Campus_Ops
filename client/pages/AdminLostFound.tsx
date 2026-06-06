@@ -3,17 +3,14 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
 import { useCampusOps } from "@/contexts/CampusOpsContext";
-import { mockLostItems, mockFoundItems } from "@/lib/mockData";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
 import { ScanSearch, CheckCircle2, MapPin, Calendar, MessageSquare, Eye, QrCode, Share2 } from "lucide-react";
 
 export default function AdminLostFound() {
-  const { lostItems, foundItems } = useCampusOps();
-  const allLost = [...mockLostItems, ...lostItems.filter(i => !mockLostItems.find(m => m.id === i.id))];
-  const allFound = [...mockFoundItems, ...foundItems.filter(i => !mockFoundItems.find(m => m.id === i.id))];
+  const { lostItems: allLost, foundItems: allFound } = useCampusOps();
 
   const [tab, setTab] = useState<"lost" | "found" | "reunited">("lost");
-  const [approved, setApproved] = useState<Set<string>>(new Set(allLost.map(i => i.id)));
+  const [approved, setApproved] = useState<Set<string>>(new Set(allLost.map((i: any) => i.id)));
   const [rejected, setRejected] = useState<Set<string>>(new Set());
   const [reunited, setReunited] = useState<Set<string>>(new Set());
   const [notified, setNotified] = useState<Set<string>>(new Set());

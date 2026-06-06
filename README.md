@@ -30,7 +30,7 @@
 
 <br/>
 
-**[🚀 Live Demo](https://campus-os.netlify.app)** • **[📖 Documentation](#-table-of-contents)** • **[🎮 Try the RPG Dashboard](#-the-hunter-system--gamified-campus-life)** • **[🤖 AI Features](#-ai--intelligence-engine)**
+**[🚀 Live Demo](https://campusops-mythos.netlify.app)** • **[📖 Documentation](#-table-of-contents)** • **[🎮 Try the RPG Dashboard](#-the-hunter-system--gamified-campus-life)** • **[🤖 AI Features](#-ai--intelligence-engine)**
 
 <br/>
 

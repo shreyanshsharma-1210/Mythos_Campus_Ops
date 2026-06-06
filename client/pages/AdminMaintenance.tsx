@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
 import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
-import { mockMaintenanceIssues } from "@/lib/mockData";
 import { callGPT } from "@/lib/openai";
 import { Wrench, AlertTriangle, CheckCircle2, Calendar, Users, MessageSquare, Zap } from "lucide-react";
 
@@ -22,8 +21,7 @@ const STAFF_MEMBERS = [
 ];
 
 export default function AdminMaintenance() {
-  const { maintenanceReports, updateMaintenanceStatus } = useCampusOps();
-  const allIssues = [...mockMaintenanceIssues, ...maintenanceReports.filter(r => !mockMaintenanceIssues.find(m => m.id === r.id))];
+  const { maintenanceReports: allIssues, updateMaintenanceStatus } = useCampusOps();
   const [assignMap, setAssignMap] = useState<Record<string, string>>({});
   const [workOrder, setWorkOrder] = useState<string | null>(null);
   const [workOrderLoading, setWorkOrderLoading] = useState(false);

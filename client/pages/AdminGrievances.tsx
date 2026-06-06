@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/PageLayout";
 import { useCampusOps } from "@/contexts/CampusOpsContext";
 import { sendWhatsAppAlert } from "@/lib/whatsapp";
-import { mockGrievances } from "@/lib/mockData";
 import { Flag, AlertTriangle, Users, Clock, CheckCircle2, Filter, MessageSquare } from "lucide-react";
 
 const RISK_STYLE: Record<string, string> = {
@@ -24,8 +23,7 @@ const STATUS_STYLE: Record<string, string> = {
 const STAFF = ["Dr. Sharma (Warden)", "IT Team", "Maintenance Dept", "Academic Office", "Security"];
 
 export default function AdminGrievances() {
-  const { grievances, updateGrievanceStatus } = useCampusOps();
-  const allGrievances = [...mockGrievances, ...grievances.filter(g => !mockGrievances.find(m => m.id === g.id))];
+  const { grievances: allGrievances, updateGrievanceStatus } = useCampusOps();
   const [filter, setFilter] = useState<"all" | "critical" | "pending">("all");
   const [assignMap, setAssignMap] = useState<Record<string, string>>({});
   const [notified, setNotified] = useState<Set<string>>(new Set());
